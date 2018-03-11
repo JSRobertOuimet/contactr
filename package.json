@@ -1,0 +1,11 @@
+{
+  "name": "Contactr",
+  "version": "1.0.0",
+  "description": "App to store your contacts.",
+  "main": "contactr.js",
+  "scripts": {
+    "api": "json-server --watch api/db.json --port 3000"
+  },
+  "author": "",
+  "license": "ISC"
+}

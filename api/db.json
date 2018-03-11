@@ -1,0 +1,55 @@
+{
+  "contacts": [
+    {
+      "id": 1,
+      "firstName": "Jean-Simon",
+      "middleName": "",
+      "lastName": "Robert Ouimet",
+      "dob": "1986-10-31",
+      "age": 31,
+      "emailAddress": "jsrobertouimet@gmail.com",
+      "phoneNumber": "6135524904",
+      "physicalAddress": {
+        "street": "129 Mann Avenue",
+        "city": "Ottawa",
+        "region": "Ontario",
+        "postalCode": "K1N8P3",
+        "country": "Canada"
+      }
+    },
+    {
+      "id": 2,
+      "firstName": "Micheline",
+      "middleName": "Marie",
+      "lastName": "Beaulieu",
+      "dob": "1967-12-17",
+      "age": 50,
+      "emailAddress": "mimibeaulieu@gmail.com",
+      "phoneNumber": "6137941174‬",
+      "physicalAddress": {
+        "street": "129 Mann Avenue",
+        "city": "Ottawa",
+        "region": "Ontario",
+        "postalCode": "K1N8P3",
+        "country": "Canada"
+      }
+    },
+    {
+      "id": 3,
+      "firstName": "Papa & Maman",
+      "middleName": "",
+      "lastName": "",
+      "dob": "",
+      "age": "",
+      "emailAddress": "jcouimet64@gmail.com",
+      "phoneNumber": "4506633100",
+      "physicalAddress": {
+        "street": "33 rue Émile",
+        "city": "Laval",
+        "region": "Québec",
+        "postalCode": "H7N4K9",
+        "country": "Canada"
+      }
+    }
+  ]
+}
