@@ -14,7 +14,7 @@ const dataCtrl = (() => {
       .then(contacts => {
         contacts.forEach(contact => {
           allContacts.push(contact);
-        });    
+        });  
         uiCtrl.displayAll(contacts);
       })
       .catch(err => console.log(err));
@@ -30,14 +30,19 @@ const uiCtrl = (() => {
     contactList: '.contactList',
     contactListItem: '.contactListItem',
     contactListItemActive: '.active',
-    contactDetails: '.contactDetails'
+    contactDetails: '.contactDetails',
+    updateBtn: '.updateBtn',
+    editBtn: '.editBtn',
+    cancelBtn: '.cancelBtn',
+    input: 'input'
   };
 
   return {
     selectors: selectors,
     displayAll: displayAll,
     displayCurrentDetails: displayCurrentDetails,
-    changeCurrent: changeCurrent
+    changeCurrent: changeCurrent,
+    toEditState: toEditState
   };
 
   function displayAll(contacts) {
@@ -54,7 +59,6 @@ const uiCtrl = (() => {
 
     contactList.innerHTML = content;
     
-    // Display first contact details on load
     document.getElementById('1').classList += ' active';
     currentContact = document.getElementById('1');
     displayCurrentDetails(currentContact.id);
@@ -75,90 +79,80 @@ const uiCtrl = (() => {
 
     let output = `
       <form>
-        <div class="row">
-          <label for="firstName" class="col-sm-3 col-form-label font-weight-bold">First Name</label>
-          <div class="col-sm-9">
-            <input type="text" class="form-control-plaintext" id="firstName" value="${currentContact.firstName}">
+        <div class="jumbotron jumbotron-fluid">
+          <div class="container">
+            <div class="row">
+              <img src="assets/img/avatar.jpeg" class="img-thumbnail rounded-circle avatar mx-auto">
+            </div>
+            <div class="d-flex justify-content-center row">
+              <input type="text" readonly class="form-control-plaintext h2 text-center" id="name" value="${currentContact.firstName} ${currentContact.middleName} ${currentContact.lastName}">
+              <button class="editBtn btn btn-outline-dark btn-sm">Edit</button>
+              <button class="cancelBtn btn btn-outline-danger btn-sm d-none">Cancel</button>
+            </div>
           </div>
         </div>
-        <div class="row">
-          <label for="middleName" class="col-sm-3 col-form-label font-weight-bold">Middle Name</label>
-          <div class="col-sm-9">
-            <input type="text" class="form-control-plaintext" id="middleName" value="${currentContact.middleName}">
-          </div>
-        </div>
-        <div class="row">
-          <label for="lastName" class="col-sm-3 col-form-label font-weight-bold">Last Name</label>
-          <div class="col-sm-9">
-            <input type="text" class="form-control-plaintext" id="lastName" value="${currentContact.lastName}">
-          </div>
-        </div>
-
         <hr>
-
         <div class="row">
-          <label for="phoneNumber" class="col-sm-3 col-form-label font-weight-bold">Phone Number</label>
+          <label for="phoneNumber" class="col-sm-3 col-form-label-sm font-weight-bold">Phone Number</label>
           <div class="col-sm-9">
-            <input type="text" class="form-control-plaintext" id="phoneNumber" value="${currentContact.phoneNumber}">
+            <input type="text" readonly class="form-control-plaintext form-control-sm" id="phoneNumber" value="${currentContact.phoneNumber}">
           </div>
         </div>
         <div class="row">
-          <label for="emailAddress" class="col-sm-3 col-form-label font-weight-bold">Email Address</label>
+          <label for="emailAddress" class="col-sm-3 col-form-label-sm font-weight-bold">Email Address</label>
           <div class="col-sm-9">
-            <input type="text" class="form-control-plaintext" id="emailAddress" value="${currentContact.emailAddress}">
+            <input type="text" readonly class="form-control-plaintext form-control-sm" id="emailAddress" value="${currentContact.emailAddress}">
           </div>
         </div>
-
         <hr>
-        
         <div class="row">
-          <label for="dob" class="col-sm-3 col-form-label font-weight-bold">Birthday</label>
+          <label for="dob" class="col-sm-3 col-form-label-sm font-weight-bold">Birthday</label>
           <div class="col-sm-9">
-            <input type="text" class="form-control-plaintext" id="dob" value="${currentContact.dob}">
+            <input type="text" readonly class="form-control-plaintext form-control-sm" id="dob" value="${currentContact.dob}">
           </div>
         </div>
         <div class="row">
-          <label for="age" class="col-sm-3 col-form-label font-weight-bold">Age</label>
+          <label for="age" class="col-sm-3 col-form-label-sm font-weight-bold">Age</label>
           <div class="col-sm-9">
-            <input type="text" class="form-control-plaintext" id="age" value="${currentContact.age}">
+            <input type="text" readonly class="form-control-plaintext form-control-sm" id="age" value="${currentContact.age}">
           </div>
         </div>
-
         <hr>
-
         <div class="row">
-          <label for="address" class="col-sm-3 col-form-label font-weight-bold">Address</label>
+          <label for="address" class="col-sm-3 col-form-label-sm font-weight-bold">Address</label>
           <div class="col-sm-9">
             <div class="row">
               <div class="col-sm-6">
-                <input type="text" class="form-control-plaintext" id="street" value="${currentContact.physicalAddress.street}">
+                <input type="text" readonly class="form-control-plaintext form-control-sm" id="street" value="${currentContact.physicalAddress.street}">
               </div>
             </div>
             <div class="row">
               <div class="col-sm-2">
-                <input type="text" class="form-control-plaintext" id="city" value="${currentContact.physicalAddress.city}">
+                <input type="text" readonly class="form-control-plaintext form-control-sm" id="city" value="${currentContact.physicalAddress.city}">
               </div>
               <div class="col-sm-2">
-                <input type="text" class="form-control-plaintext" id="region" value="${currentContact.physicalAddress.region}">
+                <input type="text" readonly class="form-control-plaintext form-control-sm" id="region" value="${currentContact.physicalAddress.region}">
               </div>
               <div class="col-sm-2">
-                <input type="text" class="form-control-plaintext" id="postalCode" value="${currentContact.physicalAddress.postalCode}">
+                <input type="text" readonly class="form-control-plaintext form-control-sm" id="postalCode" value="${currentContact.physicalAddress.postalCode}">
               </div>
             </div>
             <div class="row">
               <div class="col-sm-12">
-                <input type="text" class="form-control-plaintext" id="country" value="${currentContact.physicalAddress.country}">
+                <input type="text" readonly class="form-control-plaintext form-control-sm" id="country" value="${currentContact.physicalAddress.country}">
               </div>
             </div>
           </div>
         </div>
-
-        <div class="row">
-
-        </div>
       </form>`;
 
     contactDetails.innerHTML = output;
+
+    const editBtn = document.querySelector(selectors.editBtn);
+    const cancelBtn = document.querySelector(selectors.cancelBtn);
+
+    editBtn.addEventListener('click', toEditState);
+    cancelBtn.addEventListener('click', cancel);
   }
 
   function changeCurrent(e) {
@@ -168,6 +162,34 @@ const uiCtrl = (() => {
     }
 
     uiCtrl.displayCurrentDetails(e.target.id);
+  }
+
+  function toEditState(e) {
+    const inputs = document.querySelectorAll(selectors.input);
+    const editBtn = document.querySelector(selectors.editBtn);
+    const cancelBtn = document.querySelector(selectors.cancelBtn);
+
+    inputs.forEach(input => {
+      input.removeAttribute('readonly')
+    });
+
+    editBtn.textContent = 'Update';
+    editBtn.classList = 'updateBtn btn btn-outline-success btn-sm';
+    cancelBtn.classList = 'cancelBtn btn btn-outline-danger btn-sm d-block ml-2';
+  }
+
+  function cancel(e) {
+    const inputs = document.querySelectorAll(selectors.input);    
+    const updateBtn = document.querySelector(selectors.updateBtn);
+
+    inputs.forEach(input => {
+      input.setAttribute('readonly', 'readonly')
+    });
+    
+    updateBtn.textContent = 'Edit';
+    updateBtn.classList = 'editBtn btn btn-outline-dark btn-sm';
+
+    e.target.classList = 'cancelBtn btn btn-outline-danger btn-sm d-none ml-2';
   }
 })();
 
