@@ -1,8 +1,14 @@
 .jumbotron {
+  margin-bottom: 0;
   background-color: transparent;
 }
 
 .avatar {
   width: 100px;
   height: 100px;
+}
+
+.list-group-item.active {
+  border-color: #343a40;
+  background-color: #343a40;
 }

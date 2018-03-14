@@ -3,70 +3,100 @@
     {
       "id": 1,
       "firstName": "Jean-Simon",
-      "middleName": "",
       "lastName": "Robert Ouimet",
-      "dob": "1986-10-31",
-      "age": 31,
-      "emailAddress": "jsrobertouimet@gmail.com",
       "phoneNumber": "6135524904",
-      "physicalAddress": {
-        "street": "129 Mann Avenue",
-        "city": "Ottawa",
-        "region": "Ontario",
-        "postalCode": "K1N8P3",
-        "country": "Canada"
-      }
+      "emailAddress": "jsrobertouimet@gmail.com",
+      "dob": "1986-10-31",
+      "age": "31",
+      "street": "200-126 York Street",
+      "city": "Ottawa",
+      "region": "Ontario",
+      "postalCode": "K1N 5T5",
+      "country": "Canada"
     },
     {
       "id": 2,
       "firstName": "Micheline",
-      "middleName": "Marie",
       "lastName": "Beaulieu",
-      "dob": "1967-12-17",
-      "age": 50,
-      "emailAddress": "mimibeaulieu@gmail.com",
       "phoneNumber": "6137941174‬",
-      "physicalAddress": {
-        "street": "129 Mann Avenue",
-        "city": "Ottawa",
-        "region": "Ontario",
-        "postalCode": "K1N8P3",
-        "country": "Canada"
-      }
+      "emailAddress": "mimibeaulieu@gmail.com",
+      "dob": "1967-12-17",
+      "age": "50",
+      "street": "129 Mann Avenue",
+      "city": "Ottawa",
+      "region": "Ontario",
+      "postalCode": "K1N8P3",
+      "country": "Canada"
     },
     {
       "id": 3,
       "firstName": "Papa & Maman",
-      "middleName": "",
       "lastName": "",
+      "phoneNumber": "4506633100",
+      "emailAddress": "jcouimet64@gmail.com",
       "dob": "",
       "age": "",
-      "emailAddress": "jcouimet64@gmail.com",
-      "phoneNumber": "4506633100",
-      "physicalAddress": {
-        "street": "33 rue Émile",
-        "city": "Laval",
-        "region": "Québec",
-        "postalCode": "H7N4K9",
-        "country": "Canada"
-      }
+      "street": "33 rue Émile",
+      "city": "Laval",
+      "region": "Québec",
+      "postalCode": "H7N4K9",
+      "country": "Canada"
     },
     {
       "id": 4,
       "firstName": "Andrew",
-      "middleName": "",
       "lastName": "Riddles",
       "dob": "",
       "age": "",
       "emailAddress": "ariddles@gmail.com",
       "phoneNumber": "6132768001",
-      "physicalAddress": {
-        "street": "",
-        "city": "Ottawa",
-        "region": "Ontario",
-        "postalCode": "H7N4K9",
-        "country": "Canada"
-      }
+      "street": "",
+      "city": "Ottawa",
+      "region": "Ontario",
+      "postalCode": "",
+      "country": "Canada"
+    },
+    {
+      "id": 5,
+      "firstName": "Natalie",
+      "lastName": "Latour",
+      "dob": "1967-07-21",
+      "age": "50",
+      "emailAddress": "",
+      "phoneNumber": "5146686302‬",
+      "street": "1145, rue du Chalutier",
+      "city": "Ste-Catherine",
+      "region": "Québec",
+      "postalCode": "J5C1Y3",
+      "country": "Canada"
+    },
+    {
+      "id": 6,
+      "firstName": "Brian",
+      "lastName": "Dewar",
+      "dob": "",
+      "age": "",
+      "emailAddress": "",
+      "phoneNumber": "6134021266‬",
+      "street": "1705-199 Kent Street",
+      "city": "Ottawa",
+      "region": "Ontario",
+      "postalCode": "K2P2K8",
+      "country": "Canada"
+    },
+    {
+      "id": 7,
+      "firstName": "Sevilla",
+      "lastName": "Coudari",
+      "dob": "1990-08-27",
+      "age": "27",
+      "emailAddress": "sevillavc@hotmail.com",
+      "phoneNumber": "6138892881‬",
+      "street": "1705-199 Kent Street",
+      "city": "Ottawa",
+      "region": "Ontario",
+      "postalCode": "K2P2K8",
+      "country": "Canada"
     }
   ]
 }
