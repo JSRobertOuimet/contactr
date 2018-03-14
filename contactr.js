@@ -96,8 +96,8 @@ const uiCtrl = (() => {
             </div>
             <div class="d-flex justify-content-center">
               <button class="editBtn btn btn-outline-dark btn-sm">Edit</button>
-              <button class="cancelBtn btn btn-outline-danger btn-sm d-none">Cancel</button>              
-              <button class="updateBtn btn btn-outline-success btn-sm d-none ml-2">Update</button>
+              <button class="cancelBtn d-none">Cancel</button>              
+              <button class="updateBtn d-none">Update</button>
             </div>
           </div>
         </div>
@@ -247,12 +247,14 @@ const uiCtrl = (() => {
   }
 
   function edit(e) {
-    const inputs = document.querySelectorAll(selectors.inputs);
-    const editBtn = document.querySelector(selectors.editBtn);
-    const updateBtn = document.querySelector(selectors.updateBtn);
-    const cancelBtn = document.querySelector(selectors.cancelBtn);
+    const [inputs, editBtn, updateBtn, cancelBtn] = [
+      document.querySelectorAll(selectors.inputs),
+      document.querySelector(selectors.editBtn),
+      document.querySelector(selectors.updateBtn),
+      document.querySelector(selectors.cancelBtn)
+    ];
 
-    editBtn.className = 'editBtn btn btn-outline-dark btn-sm d-none';
+    editBtn.className = 'editBtn d-none';
     updateBtn.classList = 'updateBtn btn btn-outline-success btn-sm d-block ml-2';
     cancelBtn.classList = 'cancelBtn btn btn-outline-danger btn-sm d-block';
 
@@ -285,18 +287,19 @@ const uiCtrl = (() => {
   }
 
   function cancel(e) {
-    const inputs = document.querySelectorAll(selectors.inputs);
-    const editBtn = document.querySelector(selectors.editBtn);
-    const updateBtn = document.querySelector(selectors.updateBtn);
-    const cancelBtn = e.target;
+    const [inputs, editBtn, updateBtn, cancelBtn] = [
+      document.querySelectorAll(selectors.inputs),
+      document.querySelector(selectors.editBtn),
+      document.querySelector(selectors.updateBtn),
+      e.target
+    ];
 
     inputs.forEach(input => {
       input.setAttribute('readonly', 'readonly')
     });
     
-    editBtn.classList.add('d-block');
-    updateBtn.classList.remove('d-block');
-    updateBtn.classList.add('d-none');
+    editBtn.className = 'editBtn btn btn-outline-dark btn-sm d-block';
+    updateBtn.classList = 'updateBtn d-none';
     cancelBtn.classList = 'cancelBtn d-none';
   }
 
