@@ -1,8 +1,4 @@
 Mandatory...
-- Make body height to 100vh (non-scrollable)
-- Make contact detail section scrollable
-- Make contact list section scrollable
-- Cancel from Add a contact: repopulate fields with current contact's details
 - Generate age based upon dob
 - Add database (MongoDB)
 - Sort contacts by last name
@@ -22,4 +18,4 @@ Nice to have...
 
 New functionalities...
 - Search contact
-- Export
+- Export contact details / all contacts

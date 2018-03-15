@@ -1,11 +1,73 @@
+html {
+  height: 100%;
+}
+
+body {
+  padding-top: 56px;
+  height: 100%;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.contactListContainer {
+  position: absolute;
+  overflow: auto;
+  top: 56px;
+  bottom: 0;
+}
+
+.contactDetails {
+  position: absolute;
+  overflow: auto;
+  top: 56px;
+  bottom: 0;
+}
+
 .jumbotron {
+  position: absolute;
   margin-bottom: 0;
-  background-color: transparent;
+  z-index: 1;
+  height: 321px;
+  background-color: white;
 }
 
 .avatar {
   width: 100px;
   height: 100px;
+}
+
+.contactDetailsBody {
+  position: absolute;
+  top: 321px;
+  overflow: auto;
+  width: 100%;
+  height: calc(100vh - 377px);
+}
+
+.uploadBtn {
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  padding: 4px;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  border: 1px solid #dee2e6;
+  border-radius: 50%;
+}
+
+.uploadBtn input[type=file] {
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
 }
 
 .list-group-item.active {

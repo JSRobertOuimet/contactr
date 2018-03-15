@@ -73,6 +73,8 @@ const uiCtrl = (() => {
     contactListItemActive: '.active',
     contactDetails: '.contactDetails',
     addBtn: '.addBtn',
+    avatar: '.avatar',
+    uploadBtn: '.uploadBtn',
     deleteBtn: '.deleteBtn',
     editBtn: '.editBtn',
     updateBtn: '.updateBtn',
@@ -105,8 +107,6 @@ const uiCtrl = (() => {
     document.getElementById('1').classList += ' active';
     currentContact = document.getElementById('1');
     displayCurrentDetails(currentContact.id);
-
-    eCtrl.loadEventListeners();
   }
 
   function displayCurrentDetails(id) {
@@ -127,6 +127,9 @@ const uiCtrl = (() => {
           <div class="container">
             <div class="d-flex justify-content-center">
               <img src="assets/img/avatar.jpeg" class="img-thumbnail rounded-circle avatar">
+              <label class="uploadBtn btn btn-default d-none">
+                <input type="file">
+              </label>
             </div>
             <div class="form-row">
               <input type="hidden" id="id" value="${currentContact.id}">
@@ -146,54 +149,56 @@ const uiCtrl = (() => {
             </div>
           </div>
         </div>
-        <div class="row">
-          <label for="phoneNumber" class="col-sm-3 col-form-label-sm font-weight-bold">Phone Number</label>
-          <div class="col-sm-9">
-            <input type="text" readonly class="form-control-plaintext form-control-sm" id="phoneNumber" name="Phone Number" value="${currentContact.phoneNumber}">
-          </div>
-        </div>
-        <div class="row">
-          <label for="emailAddress" class="col-sm-3 col-form-label-sm font-weight-bold">Email Address</label>
-          <div class="col-sm-9">
-            <input type="text" readonly class="form-control-plaintext form-control-sm" id="emailAddress" name="Email" value="${currentContact.emailAddress}">
-          </div>
-        </div>
-        <hr>
-        <div class="row">
-          <label for="dob" class="col-sm-3 col-form-label-sm font-weight-bold">Birthday</label>
-          <div class="col-sm-9">
-            <input type="text" readonly class="form-control-plaintext form-control-sm" id="dob" name="Date of Birth" value="${currentContact.dob}">
-          </div>
-        </div>
-        <div class="row">
-          <label for="age" class="col-sm-3 col-form-label-sm font-weight-bold">Age</label>
-          <div class="col-sm-9">
-            <input type="text" readonly class="form-control-plaintext form-control-sm" id="age" name="Remove me!" value="${currentContact.age}">
-          </div>
-        </div>
-        <hr>
-        <div class="row">
-          <label for="address" class="col-sm-3 col-form-label-sm font-weight-bold">Address</label>
-          <div class="col-sm-9">
-            <div class="row">
-              <div class="col-sm-6">
-                <input type="text" readonly class="form-control-plaintext form-control-sm" id="street" name="Street" value="${currentContact.street}">
-              </div>
+        <div class="contactDetailsBody">
+          <div class="row">
+            <label for="phoneNumber" class="col-sm-3 col-form-label-sm font-weight-bold">Phone Number</label>
+            <div class="col-sm-9">
+              <input type="text" readonly class="form-control-plaintext form-control-sm" id="phoneNumber" name="Phone Number" value="${currentContact.phoneNumber}">
             </div>
-            <div class="form-row">
-              <div class="col-4 col-sm-2">
-                <input type="text" readonly class="form-control-plaintext form-control-sm" id="city" name="City" value="${currentContact.city}">
-              </div>
-              <div class="col-4 col-sm-2">
-                <input type="text" readonly class="form-control-plaintext form-control-sm" id="region" name="Region" value="${currentContact.region}">
-              </div>
-              <div class="col-4 col-sm-2">
-                <input type="text" readonly class="form-control-plaintext form-control-sm" id="postalCode" name="Postal Code" value="${currentContact.postalCode}">
-              </div>
+          </div>
+          <div class="row">
+            <label for="emailAddress" class="col-sm-3 col-form-label-sm font-weight-bold">Email Address</label>
+            <div class="col-sm-9">
+              <input type="text" readonly class="form-control-plaintext form-control-sm" id="emailAddress" name="Email" value="${currentContact.emailAddress}">
             </div>
-            <div class="row">
-              <div class="col-sm-12">
-                <input type="text" readonly class="form-control-plaintext form-control-sm" id="country" name="Country" value="${currentContact.country}">
+          </div>
+          <hr>
+          <div class="row">
+            <label for="dob" class="col-sm-3 col-form-label-sm font-weight-bold">Birthday</label>
+            <div class="col-sm-9">
+              <input type="text" readonly class="form-control-plaintext form-control-sm" id="dob" name="Date of Birth" value="${currentContact.dob}">
+            </div>
+          </div>
+          <div class="row">
+            <label for="age" class="col-sm-3 col-form-label-sm font-weight-bold">Age</label>
+            <div class="col-sm-9">
+              <input type="text" readonly class="form-control-plaintext form-control-sm" id="age" name="Remove me!" value="${currentContact.age}">
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <label for="address" class="col-sm-3 col-form-label-sm font-weight-bold">Address</label>
+            <div class="col-sm-9">
+              <div class="row">
+                <div class="col-sm-6">
+                  <input type="text" readonly class="form-control-plaintext form-control-sm" id="street" name="Street" value="${currentContact.street}">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="col-4 col-sm-2">
+                  <input type="text" readonly class="form-control-plaintext form-control-sm" id="city" name="City" value="${currentContact.city}">
+                </div>
+                <div class="col-4 col-sm-2">
+                  <input type="text" readonly class="form-control-plaintext form-control-sm" id="region" name="Region" value="${currentContact.region}">
+                </div>
+                <div class="col-4 col-sm-2">
+                  <input type="text" readonly class="form-control-plaintext form-control-sm" id="postalCode" name="Postal Code" value="${currentContact.postalCode}">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <input type="text" readonly class="form-control-plaintext form-control-sm" id="country" name="Country" value="${currentContact.country}">
+                </div>
               </div>
             </div>
           </div>
@@ -201,6 +206,8 @@ const uiCtrl = (() => {
       </form>`;
 
     contactDetails.innerHTML = output;
+
+    eCtrl.loadEventListeners();
   }
 
   function changeCurrent(e) {
@@ -225,18 +232,21 @@ const stateCtrl = (() => {
   };
 
   function add() {
+    const avatar = document.querySelector(uiCtrl.selectors.avatar);
+    const uploadBtn = document.querySelector(uiCtrl.selectors.uploadBtn);
     const editBtn = document.querySelector(uiCtrl.selectors.editBtn);
     const deleteBtn = document.querySelector(uiCtrl.selectors.deleteBtn);
     const cancelBtn = document.querySelector(uiCtrl.selectors.cancelBtn);
     const saveBtn = document.querySelector(uiCtrl.selectors.saveBtn);
-
     const inputs = document.querySelectorAll(uiCtrl.selectors.inputs);
 
     // Hide
+    avatar.className = 'avatar d-none';
     editBtn.className = 'editBtn d-none';
     deleteBtn.className = 'deleteBtn d-none';
 
     // Show
+    uploadBtn.classList = 'uploadBtn btn';
     cancelBtn.classList = 'cancelBtn btn btn-outline-dark btn-sm d-block';
     saveBtn.classList = 'saveBtn btn btn-outline-success btn-sm d-block ml-2';
 
@@ -271,22 +281,20 @@ const stateCtrl = (() => {
   }
 
   function cancel(e) {
+    const avatar = document.querySelector(uiCtrl.selectors.avatar);
+    const uploadBtn = document.querySelector(uiCtrl.selectors.uploadBtn);
     const editBtn = document.querySelector(uiCtrl.selectors.editBtn);
     const deleteBtn = document.querySelector(uiCtrl.selectors.deleteBtn);
     const updateBtn = document.querySelector(uiCtrl.selectors.updateBtn);
     const cancelBtn = e.target;
     const saveBtn = document.querySelector(uiCtrl.selectors.saveBtn);
-
     const inputs = document.querySelectorAll(uiCtrl.selectors.inputs);
+    const currentContact = document.querySelector('.active');
 
-    inputs.forEach(input => {
-      input.removeAttribute('placeholder');
-      // input.value...
-      input.setAttribute('readonly', true);
-    });
+    uiCtrl.displayCurrentDetails(currentContact.id);
 
-    // uiCtrl.displayCurrentDetails();
-
+    avatar.className = 'img-thumbnail rounded-circle avatar d-block';
+    uploadBtn.className = 'uploadBtn d-none'
     editBtn.className = 'editBtn btn btn-outline-dark btn-sm d-block';
     deleteBtn.classList = 'deleteBtn btn btn-outline-danger btn-sm ml-2';
     updateBtn.classList = 'updateBtn d-none';
