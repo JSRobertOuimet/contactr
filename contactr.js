@@ -48,7 +48,7 @@ const dataCtrl = (() => {
       if(contactDetails.id === parseInt(updatedContactDetails.id)) {
         contactDetails = updatedContactDetails;
         debugger;
-        httpService.put(`http://localhost:3000/contacts/${contactDetails.id}`, contactDetails);        
+        httpService.put(`http://localhost:3000/contacts/${contactDetails.id}`, contactDetails);
       }
     });
 
@@ -101,10 +101,12 @@ const uiCtrl = (() => {
     });
 
     contactList.innerHTML = content;
-    
+
     document.getElementById('1').classList += ' active';
     currentContact = document.getElementById('1');
     displayCurrentDetails(currentContact.id);
+
+    eCtrl.loadEventListeners();
   }
 
   function displayCurrentDetails(id) {
@@ -132,12 +134,12 @@ const uiCtrl = (() => {
                 <input type="text" readonly class="form-control-plaintext h2 text-right" id="firstName" name="First Name" value="${currentContact.firstName}">
               </div>
               <div class="col">
-                <input type="text" readonly class="form-control-plaintext h2 text-left" id="lastName" name="Last Name" value="${currentContact.lastName}">              
+                <input type="text" readonly class="form-control-plaintext h2 text-left" id="lastName" name="Last Name" value="${currentContact.lastName}">
               </div>
             </div>
             <div class="d-flex justify-content-center">
               <button class="editBtn btn btn-outline-dark btn-sm">Edit</button>
-              <button class="cancelBtn d-none">Cancel</button>       
+              <button class="cancelBtn d-none">Cancel</button>
               <button class="updateBtn d-none">Update</button>
               <button class="saveBtn d-none">Save</button>
               <button class="deleteBtn btn btn-outline-danger btn-sm ml-2">Delete</button>
@@ -199,8 +201,6 @@ const uiCtrl = (() => {
       </form>`;
 
     contactDetails.innerHTML = output;
-
-    eCtrl.loadEventListeners();
   }
 
   function changeCurrent(e) {
@@ -217,12 +217,11 @@ const uiCtrl = (() => {
 // ==============================
 // State controller
 // ==============================
-const stateCtrl = (() => {  
+const stateCtrl = (() => {
   return {
     add: add,
     edit: edit,
     cancel: cancel,
-    addCancel: addCancel,
   };
 
   function add() {
@@ -250,7 +249,7 @@ const stateCtrl = (() => {
 
   function edit(e) {
     const editBtn = document.querySelector(uiCtrl.selectors.editBtn);
-    const deleteBtn = document.querySelector(uiCtrl.selectors.deleteBtn);    
+    const deleteBtn = document.querySelector(uiCtrl.selectors.deleteBtn);
     const updateBtn = document.querySelector(uiCtrl.selectors.updateBtn);
     const cancelBtn = document.querySelector(uiCtrl.selectors.cancelBtn);
 
@@ -273,32 +272,28 @@ const stateCtrl = (() => {
 
   function cancel(e) {
     const editBtn = document.querySelector(uiCtrl.selectors.editBtn);
-    const deleteBtn = document.querySelector(uiCtrl.selectors.deleteBtn);    
+    const deleteBtn = document.querySelector(uiCtrl.selectors.deleteBtn);
     const updateBtn = document.querySelector(uiCtrl.selectors.updateBtn);
     const cancelBtn = e.target;
-    const saveBtn = document.querySelector(uiCtrl.selectors.saveBtn);    
+    const saveBtn = document.querySelector(uiCtrl.selectors.saveBtn);
 
-    const inputs = document.querySelectorAll(uiCtrl.selectors.inputs);    
+    const inputs = document.querySelectorAll(uiCtrl.selectors.inputs);
 
     inputs.forEach(input => {
       input.removeAttribute('placeholder');
-      // input.value...      
+      // input.value...
       input.setAttribute('readonly', true);
     });
 
     // uiCtrl.displayCurrentDetails();
-    
+
     editBtn.className = 'editBtn btn btn-outline-dark btn-sm d-block';
     deleteBtn.classList = 'deleteBtn btn btn-outline-danger btn-sm ml-2';
     updateBtn.classList = 'updateBtn d-none';
     cancelBtn.classList = 'cancelBtn d-none';
     saveBtn.classList = 'saveBtn d-none';
-    
-    e.preventDefault();
-  }
 
-  function addCancel() {
-    console.log('Canceled adding a contact!');
+    e.preventDefault();
   }
 })();
 
@@ -320,8 +315,7 @@ const eCtrl = (() => {
     const cancelBtn = document.querySelector(uiCtrl.selectors.cancelBtn);
     const updateBtn = document.querySelector(uiCtrl.selectors.updateBtn);
     const saveBtn = document.querySelector(uiCtrl.selectors.saveBtn);
-    const addCancelBtn = document.querySelector(uiCtrl.selectors.addCancelBtn);
-    
+
     contactList.addEventListener('click', uiCtrl.changeCurrent);
     addBtn.addEventListener('click', stateCtrl.add);
     editBtn.addEventListener('click', stateCtrl.edit);
@@ -330,7 +324,6 @@ const eCtrl = (() => {
     cancelBtn.addEventListener('click', stateCtrl.cancel);
     updateBtn.addEventListener('click', dataCtrl.update);
     saveBtn.addEventListener('click', dataCtrl.save);
-    addCancelBtn.addEventListener('click', stateCtrl.addCancel);
   }
 })();
 
