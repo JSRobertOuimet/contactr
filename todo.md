@@ -1,5 +1,5 @@
 Mandatory...
-- Generate age based upon dob
+- Show fields only if populated
 - Persist data externally
 - Sort contacts by last name
 - Upload photo

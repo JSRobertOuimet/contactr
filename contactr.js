@@ -2,18 +2,20 @@
 // Data controller
 // ==============================
 const dataCtrl = (() => {
+  const apiUrl = 'http://localhost:3000/contacts';
   let storedContacts = [];
 
   return {
     fetchContacts: fetchContacts,
     storedContacts: storedContacts,
+    getAge: getAge,
     save: save,
     update: update,
-    remove: remove
+    delete: del
   };
 
   function fetchContacts() {
-    const contacts = httpService.get('http://localhost:3000/contacts')
+    const contacts = httpService.get(apiUrl)
       .then(contacts => {
         contacts.forEach(contact => {
           storedContacts.push(contact);
@@ -23,7 +25,16 @@ const dataCtrl = (() => {
       .catch(err => console.log(err));
   }
 
-  function save(e) {
+  function getAge(date) {
+    const dob = new Date(date);
+    const dobMs = dob.getTime();
+    const ageMs = Date.now() - dobMs;
+    const ageDate = new Date(ageMs);
+
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+  }
+
+  function save() {
     const inputValues = document.querySelectorAll(uiCtrl.selectors.inputs);
     const contacts = dataCtrl.storedContacts;
     let [keys, values] = [[], []];
@@ -38,10 +49,10 @@ const dataCtrl = (() => {
       newContactDetails[key] = values[i];
     });
 
-    httpService.post(`http://localhost:3000/contacts`, newContactDetails);
+    httpService.post(apiUrl, newContactDetails);
   }
 
-  function update(e) {
+  function update() {
     const inputValues = document.querySelectorAll(uiCtrl.selectors.inputs);
     const contacts = dataCtrl.storedContacts;
     let [keys, values] = [[], []];
@@ -59,19 +70,19 @@ const dataCtrl = (() => {
     contacts.forEach(contactDetails => {
       if(contactDetails.id === parseInt(updatedContactDetails.id)) {
         contactDetails = updatedContactDetails;
-        httpService.put(`http://localhost:3000/contacts/${contactDetails.id}`, contactDetails);
+        httpService.put(`${apiUrl}/${contactDetails.id}`, contactDetails);
       }
     });
   }
 
-  function remove(e) {
+  function del() {
     const contacts = dataCtrl.storedContacts;
     const currentContactId = document.getElementById('id').value;
 
     if(confirm('Are you sure?')) {
       contacts.forEach(contactDetails => {
         if(contactDetails.id === parseInt(currentContactId)) {
-          httpService.delete(`http://localhost:3000/contacts/${contactDetails.id}`);
+          httpService.delete(`${apiUrl}/${contactDetails.id}`);
         }
       });
     }
@@ -87,6 +98,7 @@ const uiCtrl = (() => {
     contactList: '.contactList',
     contactListItem: '.contactListItem',
     contactListItemActive: '.active',
+    contactName: '.contact-name',
     contactDetails: '.contactDetails',
     addBtn: '.addBtn',
     avatar: '.avatar',
@@ -109,12 +121,13 @@ const uiCtrl = (() => {
 
   function listAll(storedContacts) {
     const contactList = document.querySelector(selectors.contactList);
+    const contactName = document.querySelector(selectors.contactName);
     let currentContact, content = '';
 
     storedContacts.forEach(contact => {
       content += `
         <li id="${contact.id}" class="contactListItem list-group-item list-group-item-action">
-          <span class="contact-name">${contact.firstName} <b>${contact.lastName}</b></span>
+          </div><span class="contact-name">${contact.firstName} <b>${contact.lastName}</b></span>
         </li>`;
     });
 
@@ -129,13 +142,15 @@ const uiCtrl = (() => {
     const storedContacts = dataCtrl.storedContacts;
     const contactDetails = document.querySelector(selectors.contactDetails);
     const inputs = document.querySelectorAll(selectors.inputs);
-    let currentContact, output;
+    let currentContact, age, output;
 
     storedContacts.forEach(contact => {
       if(contact.id === parseInt(id)) {
         currentContact = contact;
       }
     });
+
+    currentContact.age = dataCtrl.getAge(currentContact.dob);
 
     output = `
       <form>
@@ -343,7 +358,7 @@ const eCtrl = (() => {
     contactList.addEventListener('click', uiCtrl.changeCurrent);
     addBtn.addEventListener('click', stateCtrl.add);
     editBtn.addEventListener('click', stateCtrl.edit);
-    deleteBtn.addEventListener('click', dataCtrl.remove);
+    deleteBtn.addEventListener('click', dataCtrl.delete);
 
     cancelBtn.addEventListener('click', stateCtrl.cancel);
     updateBtn.addEventListener('click', dataCtrl.update);
