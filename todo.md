@@ -1,11 +1,9 @@
 Mandatory...
 - Generate age based upon dob
-- Add database (MongoDB)
+- Persist data externally
 - Sort contacts by last name
 - Upload photo
 - Edit: focus on First Name automatically
-- Add save (new) contact functionality
-- Add delete functionality
 - Deal with mobile layout (drawer for sidebar?)
 
 Nice to have...

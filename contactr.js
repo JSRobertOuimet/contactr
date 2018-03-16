@@ -24,9 +24,21 @@ const dataCtrl = (() => {
   }
 
   function save(e) {
-    console.log('Saving new contact!');
+    const inputValues = document.querySelectorAll(uiCtrl.selectors.inputs);
+    const contacts = dataCtrl.storedContacts;
+    let [keys, values] = [[], []];
+    let newContactDetails = {};
 
-    e.preventDefault();
+    inputValues.forEach(input => {
+      keys.push(input.id);
+      values.push(input.value);
+    });
+
+    keys.forEach((key, i) => {
+      newContactDetails[key] = values[i];
+    });
+
+    httpService.post(`http://localhost:3000/contacts`, newContactDetails);
   }
 
   function update(e) {
@@ -47,18 +59,22 @@ const dataCtrl = (() => {
     contacts.forEach(contactDetails => {
       if(contactDetails.id === parseInt(updatedContactDetails.id)) {
         contactDetails = updatedContactDetails;
-        debugger;
         httpService.put(`http://localhost:3000/contacts/${contactDetails.id}`, contactDetails);
       }
     });
-
-    e.preventDefault();
   }
 
   function remove(e) {
-    confirm('Are you sure?');
+    const contacts = dataCtrl.storedContacts;
+    const currentContactId = document.getElementById('id').value;
 
-    e.preventDefault();
+    if(confirm('Are you sure?')) {
+      contacts.forEach(contactDetails => {
+        if(contactDetails.id === parseInt(currentContactId)) {
+          httpService.delete(`http://localhost:3000/contacts/${contactDetails.id}`);
+        }
+      });
+    }
   }
 })();
 
@@ -128,7 +144,7 @@ const uiCtrl = (() => {
             <div class="d-flex justify-content-center">
               <img src="assets/img/avatar.jpeg" class="img-thumbnail rounded-circle avatar">
               <label class="uploadBtn btn btn-default d-none">
-                <input type="file">
+                <input type="file" id="avatar">
               </label>
             </div>
             <div class="form-row">
