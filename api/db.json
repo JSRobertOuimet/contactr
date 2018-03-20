@@ -44,13 +44,15 @@
       "country": "Canada"
     },
     {
+      "search": "",
+      "avatar": "",
       "id": 5,
       "firstName": "Natalie",
       "lastName": "Latour",
+      "phoneNumber": "15146686302‬",
+      "emailAddress": "",
       "dob": "1967-07-21",
       "age": "50",
-      "emailAddress": "",
-      "phoneNumber": "5146686302‬",
       "street": "1145, rue du Chalutier",
       "city": "Ste-Catherine",
       "region": "Québec",
@@ -170,6 +172,36 @@
       "region": "",
       "postalCode": "",
       "country": ""
+    },
+    {
+      "avatar": "",
+      "id": 15,
+      "firstName": "Michel",
+      "lastName": "Duchesneau",
+      "phoneNumber": "",
+      "emailAddress": "mduchesneau@umontreal.ca",
+      "dob": "",
+      "age": "",
+      "street": "",
+      "city": "Montréal",
+      "region": "Québec",
+      "postalCode": "",
+      "country": "Canada"
+    },
+    {
+      "avatar": "",
+      "id": 16,
+      "firstName": "Albert",
+      "lastName": "Einstein",
+      "phoneNumber": "",
+      "emailAddress": "emc2@gmail.com",
+      "dob": "",
+      "age": "",
+      "street": "",
+      "city": "",
+      "region": "",
+      "postalCode": "",
+      "country": "USA"
     }
   ]
 }
