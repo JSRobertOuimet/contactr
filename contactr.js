@@ -127,7 +127,7 @@ const uiCtrl = (() => {
     storedContacts.forEach(contact => {
       content += `
         <li id="${contact.id}" class="contactListItem list-group-item list-group-item-action">
-          </div><span class="contact-name">${contact.firstName} <b>${contact.lastName}</b></span>
+          <span class="contact-name">${contact.firstName} <b>${contact.lastName}</b></span>
         </li>`;
     });
 
