@@ -52,11 +52,13 @@ const dataCtrl = (() => {
     httpService.post(apiUrl, newContactDetails);
   }
 
-  function update() {
+  function update(e) {
     const inputValues = document.querySelectorAll(uiCtrl.selectors.inputs);
     const contacts = dataCtrl.storedContacts;
     let [keys, values] = [[], []];
     let updatedContactDetails = {};
+
+    console.log(inputValues);
 
     inputValues.forEach(input => {
       keys.push(input.id);
@@ -73,6 +75,8 @@ const dataCtrl = (() => {
         httpService.put(`${apiUrl}/${contactDetails.id}`, contactDetails);
       }
     });
+
+    e.preventDefault();
   }
 
   function del() {
@@ -98,6 +102,7 @@ const uiCtrl = (() => {
     contactList: '.contactList',
     contactListItem: '.contactListItem',
     contactListItemActive: '.active',
+    searchInput: '.searchInput',
     contactName: '.contact-name',
     contactDetails: '.contactDetails',
     addBtn: '.addBtn',
@@ -109,14 +114,15 @@ const uiCtrl = (() => {
     saveBtn: '.saveBtn',
     cancelBtn: '.cancelBtn',
     addCancelBtn: '.addCancelBtn',
-    inputs: 'input'
+    inputs: '.contactDetail'
   };
 
   return {
     selectors: selectors,
     listAll: listAll,
     displayCurrentDetails: displayCurrentDetails,
-    changeCurrent: changeCurrent
+    changeCurrent: changeCurrent,
+    search: search
   };
 
   function listAll(storedContacts) {
@@ -159,16 +165,16 @@ const uiCtrl = (() => {
             <div class="d-flex justify-content-center">
               <img src="assets/img/avatar.jpeg" class="img-thumbnail rounded-circle avatar">
               <label class="uploadBtn btn btn-default d-none">
-                <input type="file" id="avatar">
+                <input type="file" id="avatar" class="contactDetail">
               </label>
             </div>
             <div class="form-row">
-              <input type="hidden" id="id" value="${currentContact.id}">
+              <input type="hidden" id="id" class="contactDetail" value="${currentContact.id}">
               <div class="col">
-                <input type="text" readonly class="form-control-plaintext h2 text-right" id="firstName" name="First Name" value="${currentContact.firstName}">
+                <input type="text" readonly class="form-control-plaintext h2 text-right contactDetail" id="firstName" name="First Name" value="${currentContact.firstName}">
               </div>
               <div class="col">
-                <input type="text" readonly class="form-control-plaintext h2 text-left" id="lastName" name="Last Name" value="${currentContact.lastName}">
+                <input type="text" readonly class="form-control-plaintext h2 text-left contactDetail" id="lastName" name="Last Name" value="${currentContact.lastName}">
               </div>
             </div>
             <div class="d-flex justify-content-center">
@@ -184,26 +190,26 @@ const uiCtrl = (() => {
           <div class="row">
             <label for="phoneNumber" class="col-sm-3 col-form-label-sm font-weight-bold">Phone Number</label>
             <div class="col-sm-9">
-              <input type="text" readonly class="form-control-plaintext form-control-sm" id="phoneNumber" name="Phone Number" value="${currentContact.phoneNumber}">
+              <input type="text" readonly class="form-control-plaintext form-control-sm contactDetail" id="phoneNumber" name="Phone Number" value="${currentContact.phoneNumber}">
             </div>
           </div>
           <div class="row">
             <label for="emailAddress" class="col-sm-3 col-form-label-sm font-weight-bold">Email Address</label>
             <div class="col-sm-9">
-              <input type="text" readonly class="form-control-plaintext form-control-sm" id="emailAddress" name="Email" value="${currentContact.emailAddress}">
+              <input type="text" readonly class="form-control-plaintext form-control-sm contactDetail" id="emailAddress" name="Email" value="${currentContact.emailAddress}">
             </div>
           </div>
           <hr>
           <div class="row">
             <label for="dob" class="col-sm-3 col-form-label-sm font-weight-bold">Birthday</label>
             <div class="col-sm-9">
-              <input type="text" readonly class="form-control-plaintext form-control-sm" id="dob" name="Date of Birth" value="${currentContact.dob}">
+              <input type="text" readonly class="form-control-plaintext form-control-sm contactDetail" id="dob" name="Date of Birth" value="${currentContact.dob}">
             </div>
           </div>
           <div class="row">
             <label for="age" class="col-sm-3 col-form-label-sm font-weight-bold">Age</label>
             <div class="col-sm-9">
-              <input type="text" readonly class="form-control-plaintext form-control-sm" id="age" name="Remove me!" value="${currentContact.age}">
+              <input type="text" readonly class="form-control-plaintext form-control-sm contactDetail" id="age" name="Remove me!" value="${currentContact.age}">
             </div>
           </div>
           <hr>
@@ -212,23 +218,23 @@ const uiCtrl = (() => {
             <div class="col-sm-9">
               <div class="row">
                 <div class="col-sm-6">
-                  <input type="text" readonly class="form-control-plaintext form-control-sm" id="street" name="Street" value="${currentContact.street}">
+                  <input type="text" readonly class="form-control-plaintext form-control-sm contactDetail" id="street" name="Street" value="${currentContact.street}">
                 </div>
               </div>
               <div class="form-row">
                 <div class="col-4 col-sm-2">
-                  <input type="text" readonly class="form-control-plaintext form-control-sm" id="city" name="City" value="${currentContact.city}">
+                  <input type="text" readonly class="form-control-plaintext form-control-sm contactDetail" id="city" name="City" value="${currentContact.city}">
                 </div>
                 <div class="col-4 col-sm-2">
-                  <input type="text" readonly class="form-control-plaintext form-control-sm" id="region" name="Region" value="${currentContact.region}">
+                  <input type="text" readonly class="form-control-plaintext form-control-sm contactDetail" id="region" name="Region" value="${currentContact.region}">
                 </div>
                 <div class="col-4 col-sm-2">
-                  <input type="text" readonly class="form-control-plaintext form-control-sm" id="postalCode" name="Postal Code" value="${currentContact.postalCode}">
+                  <input type="text" readonly class="form-control-plaintext form-control-sm contactDetail" id="postalCode" name="Postal Code" value="${currentContact.postalCode}">
                 </div>
               </div>
               <div class="row">
                 <div class="col-sm-12">
-                  <input type="text" readonly class="form-control-plaintext form-control-sm" id="country" name="Country" value="${currentContact.country}">
+                  <input type="text" readonly class="form-control-plaintext form-control-sm contactDetail" id="country" name="Country" value="${currentContact.country}">
                 </div>
               </div>
             </div>
@@ -248,6 +254,24 @@ const uiCtrl = (() => {
     }
 
     uiCtrl.displayCurrentDetails(e.target.id);
+  }
+
+  function search(e) {
+    const contactNames = document.querySelectorAll(selectors.contactName);
+    let searchInput = e.target.value;
+
+    console.log(e.target.value);
+
+    contactNames.forEach(contactName => {
+      if(contactName.textContent.indexOf(searchInput) === -1) {
+        contactName.parentElement.style.display = 'none';
+      }
+      if(searchInput === '') {
+        contactNames.forEach(contactName => {
+          contactName.parentElement.style.display = 'block';
+        });
+      }
+    });
   }
 })();
 
@@ -347,6 +371,7 @@ const eCtrl = (() => {
 
   function loadEventListeners() {
     const contactList = document.querySelector(uiCtrl.selectors.contactList);
+    const searchInput = document.querySelector(uiCtrl.selectors.searchInput);
     const addBtn = document.querySelector(uiCtrl.selectors.addBtn);
     const editBtn = document.querySelector(uiCtrl.selectors.editBtn);
     const deleteBtn = document.querySelector(uiCtrl.selectors.deleteBtn);
@@ -356,6 +381,7 @@ const eCtrl = (() => {
     const saveBtn = document.querySelector(uiCtrl.selectors.saveBtn);
 
     contactList.addEventListener('click', uiCtrl.changeCurrent);
+    searchInput.addEventListener('keyup', uiCtrl.search);
     addBtn.addEventListener('click', stateCtrl.add);
     editBtn.addEventListener('click', stateCtrl.edit);
     deleteBtn.addEventListener('click', dataCtrl.delete);

@@ -5,10 +5,10 @@
       "id": 1,
       "firstName": "Jean-Simon",
       "lastName": "Robert Ouimet",
-      "phoneNumber": "6135524904",
+      "phoneNumber": "16135524904",
       "emailAddress": "jsrobertouimet@gmail.com",
       "dob": "1986-10-31",
-      "age": "727",
+      "age": "31",
       "street": "129 Mann Avenue",
       "city": "Ottawa",
       "region": "Ontario",
@@ -16,8 +16,10 @@
       "country": "Canada"
     },
     {
+      "search": "",
+      "avatar": "",
       "id": 2,
-      "firstName": "Micheline",
+      "firstName": "Micheline Marie",
       "lastName": "Beaulieu",
       "phoneNumber": "6137941174‬",
       "emailAddress": "mimibeaulieu@gmail.com",
@@ -145,21 +147,6 @@
     },
     {
       "avatar": "",
-      "id": 13,
-      "firstName": "Hello",
-      "lastName": "World!",
-      "phoneNumber": "6131122220",
-      "emailAddress": "hw@gmail.com",
-      "dob": "2010-01-23",
-      "age": "34",
-      "street": "123 Some Street",
-      "city": "City",
-      "region": "Region",
-      "postalCode": "H8W8U7",
-      "country": "Japan"
-    },
-    {
-      "avatar": "",
       "id": 14,
       "firstName": "Allison",
       "lastName": "Batoff",
@@ -174,34 +161,20 @@
       "country": ""
     },
     {
+      "search": "",
       "avatar": "",
       "id": 15,
-      "firstName": "Michel",
+      "firstName": "M.",
       "lastName": "Duchesneau",
       "phoneNumber": "",
       "emailAddress": "mduchesneau@umontreal.ca",
       "dob": "",
-      "age": "",
+      "age": "NaN",
       "street": "",
       "city": "Montréal",
       "region": "Québec",
       "postalCode": "",
       "country": "Canada"
-    },
-    {
-      "avatar": "",
-      "id": 16,
-      "firstName": "Albert",
-      "lastName": "Einstein",
-      "phoneNumber": "",
-      "emailAddress": "emc2@gmail.com",
-      "dob": "",
-      "age": "",
-      "street": "",
-      "city": "",
-      "region": "",
-      "postalCode": "",
-      "country": "USA"
     }
   ]
 }
