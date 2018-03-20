@@ -3,7 +3,7 @@
   width: calc(100% - 10px);
 }
 
-.search:focus {
+.searchInput:focus {
   border-color: #495057;
   outline: none;
   box-shadow: 0 0 0 0.2rem rgba(73, 80, 87, .25);

@@ -222,13 +222,13 @@ const uiCtrl = (() => {
                 </div>
               </div>
               <div class="form-row">
-                <div class="col-4 col-sm-2">
+                <div class="col col-lg-2">
                   <input type="text" readonly class="form-control-plaintext form-control-sm contactDetail" id="city" name="City" value="${currentContact.city}">
                 </div>
-                <div class="col-4 col-sm-2">
+                <div class="col col-lg-2">
                   <input type="text" readonly class="form-control-plaintext form-control-sm contactDetail" id="region" name="Region" value="${currentContact.region}">
                 </div>
-                <div class="col-4 col-sm-2">
+                <div class="col col-lg-2">
                   <input type="text" readonly class="form-control-plaintext form-control-sm contactDetail" id="postalCode" name="Postal Code" value="${currentContact.postalCode}">
                 </div>
               </div>
@@ -259,19 +259,18 @@ const uiCtrl = (() => {
   function search(e) {
     const contactNames = document.querySelectorAll(selectors.contactName);
     let searchInput = e.target.value;
+    let filteredContacts = document.querySelectorAll(selectors.contactListItem);
 
-    console.log(e.target.value);
-
-    contactNames.forEach(contactName => {
-      if(contactName.textContent.indexOf(searchInput) === -1) {
-        contactName.parentElement.style.display = 'none';
-      }
-      if(searchInput === '') {
-        contactNames.forEach(contactName => {
+    if(e.shiftKey === false) {
+      contactNames.forEach(contactName => {
+        if(contactName.textContent.indexOf(searchInput) === -1) {
+          contactName.parentElement.style.display = 'none';
+        }
+        else {
           contactName.parentElement.style.display = 'block';
-        });
-      }
-    });
+        }
+      });
+    }
   }
 })();
 

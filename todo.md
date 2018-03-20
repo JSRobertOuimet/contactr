@@ -1,5 +1,4 @@
 Mandatory...
-- Identify selected contact
 - Show fields only if populated
 - Persist data externally
 - Upload photo
@@ -16,5 +15,5 @@ Nice to have...
 - Format dob
 
 New functionalities...
-- Search contact
+- Search contact (WIP)
 - Export contact details / all contacts
