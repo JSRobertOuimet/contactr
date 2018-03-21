@@ -1,3 +1,17 @@
 {
-  "contacts": []
+  "contacts": [
+    {
+      "id": 1,
+      "firstName": "Jean-Simon",
+      "lastName": "Robert Ouimet",
+      "phoneNumber": "16135524904",
+      "emailAddress": "jsrobertouimet@gmail.com",
+      "dob": "1986-10-31",
+      "street": "129 Mann Avenue",
+      "city": "Ottawa",
+      "region": "Ontario",
+      "postalCode": "K1N 8P3",
+      "country": "Canada"
+    }
+  ]
 }

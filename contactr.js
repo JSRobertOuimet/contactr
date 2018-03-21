@@ -119,6 +119,7 @@ const uiCtrl = (() => {
     selectors: selectors,
     listAll: listAll,
     selectFirstContact: selectFirstContact,
+    displayEmptyState: displayEmptyState,
     displayCurrentDetails: displayCurrentDetails,
     changeCurrent: changeCurrent,
     search: search
@@ -127,19 +128,31 @@ const uiCtrl = (() => {
   function listAll(storedContacts) {
     const contactList = document.querySelector(selectors.contactList);
     const contactName = document.querySelector(selectors.contactName);
-    let currentContact, content = '';
+    let currentContact;
+    let content = '';
 
-    storedContacts.forEach(contact => {
-      content += `
-        <li id="${contact.id}" class="contactListItem list-group-item list-group-item-action">
-          <span class="contact-name">${contact.firstName} <b>${contact.lastName}</b></span>
-        </li>`;
-    });
+    if(storedContacts.length === 0) {
+      for(let i = 0; i < 50; i++) {
+        content += '<li class="list-group-item empty-contact-list-item"></li>';
+      }
 
-    contactList.innerHTML = content;
+      contactList.innerHTML = content;
+      
+      displayEmptyState('You have no contact yet. Add one!');
+    }
+    else {
+      storedContacts.forEach(contact => {
+        content += `
+          <li id="${contact.id}" class="contactListItem list-group-item list-group-item-action">
+            <span class="contact-name">${contact.firstName} <b>${contact.lastName}</b></span>
+          </li>`;
+      });
 
-    currentContact = selectFirstContact();
-    displayCurrentDetails(currentContact.id);
+      contactList.innerHTML = content;
+
+      currentContact = selectFirstContact();
+      displayCurrentDetails(currentContact.id);
+    }
   }
 
   function selectFirstContact() {
@@ -148,6 +161,12 @@ const uiCtrl = (() => {
     firstContact.classList += ' active';
 
     return firstContact;
+  }
+
+  function displayEmptyState(message) {
+    const contactDetails = document.querySelector(selectors.contactDetails);
+
+    contactDetails.innerHTML = `<div class="my-auto mx-auto text-center text-muted h3">${message}</div>`;
   }
 
   function displayCurrentDetails(id) {
