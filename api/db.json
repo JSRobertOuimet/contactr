@@ -1,6 +1,7 @@
 {
   "contacts": [
     {
+      "avatar": "",
       "id": 1,
       "firstName": "Jean-Simon",
       "lastName": "Robert Ouimet",
@@ -11,6 +12,21 @@
       "city": "Ottawa",
       "region": "Ontario",
       "postalCode": "K1N 8P3",
+      "country": "Canada"
+    },
+    {
+      "avatar": "",
+      "id": 2,
+      "firstName": "Sevilla",
+      "lastName": "Coudari",
+      "phoneNumber": "6138892881",
+      "emailAddress": "sevillavc@hotmail.com",
+      "dob": "",
+      "age": "",
+      "street": "1705-199 Kent Street",
+      "city": "Ottawa",
+      "region": "Ontario",
+      "postalCode": "K2P 2K8",
       "country": "Canada"
     }
   ]

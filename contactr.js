@@ -19,10 +19,22 @@ const dataCtrl = (() => {
       .then(contacts => {
         contacts.forEach(contact => {
           storedContacts.push(contact);
+          storedContacts.sort(sortContactsByLastName);
         });
-        uiCtrl.listAll(storedContacts);
+        uiCtrl.populateContactList(storedContacts);
       })
       .catch(err => console.log(err));
+  }
+
+  function sortContactsByLastName(a, b) {
+    if(a.lastName < b.lastName) {
+      return -1;
+    }
+    if(a.lastName > b.lastName) {
+      return 1;
+    }
+
+    return 0;
   }
 
   function getAge(date) {
@@ -117,28 +129,21 @@ const uiCtrl = (() => {
 
   return {
     selectors: selectors,
-    listAll: listAll,
-    selectFirstContact: selectFirstContact,
-    displayEmptyState: displayEmptyState,
+    populateContactList: populateContactList,
     displayCurrentDetails: displayCurrentDetails,
     changeCurrent: changeCurrent,
     search: search
   };
 
-  function listAll(storedContacts) {
+  function populateContactList(storedContacts) {
     const contactList = document.querySelector(selectors.contactList);
     const contactName = document.querySelector(selectors.contactName);
     let currentContact;
     let content = '';
 
     if(storedContacts.length === 0) {
-      for(let i = 0; i < 50; i++) {
-        content += '<li class="list-group-item empty-contact-list-item"></li>';
-      }
-
-      contactList.innerHTML = content;
-      
-      displayEmptyState('You have no contact yet. Add one!');
+      displayEmptyList(20);
+      displayEmptyDetails('You have no contact yet.');
     }
     else {
       storedContacts.forEach(contact => {
@@ -163,7 +168,18 @@ const uiCtrl = (() => {
     return firstContact;
   }
 
-  function displayEmptyState(message) {
+  function displayEmptyList(listItems) {
+    const contactList = document.querySelector(selectors.contactList);
+    let content = '';
+
+    for(let i = 0; i < listItems; i++) {
+      content += '<li class="list-group-item empty-contact-list-item"></li>';
+    }
+
+    contactList.innerHTML = content;
+  }
+
+  function displayEmptyDetails(message) {
     const contactDetails = document.querySelector(selectors.contactDetails);
 
     contactDetails.innerHTML = `<div class="my-auto mx-auto text-center text-muted h3">${message}</div>`;
@@ -280,7 +296,7 @@ const uiCtrl = (() => {
       e.target.classList += ' active';
     }
 
-    uiCtrl.displayCurrentDetails(e.target.id);
+    displayCurrentDetails(e.target.id);
   }
 
   function search(e) {
