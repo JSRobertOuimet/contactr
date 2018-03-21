@@ -58,8 +58,6 @@ const dataCtrl = (() => {
     let [keys, values] = [[], []];
     let updatedContactDetails = {};
 
-    console.log(inputValues);
-
     inputValues.forEach(input => {
       keys.push(input.id);
       values.push(input.value);
@@ -120,6 +118,7 @@ const uiCtrl = (() => {
   return {
     selectors: selectors,
     listAll: listAll,
+    selectFirstContact: selectFirstContact,
     displayCurrentDetails: displayCurrentDetails,
     changeCurrent: changeCurrent,
     search: search
@@ -139,9 +138,16 @@ const uiCtrl = (() => {
 
     contactList.innerHTML = content;
 
-    document.getElementById('1').classList += ' active';
-    currentContact = document.getElementById('1');
+    currentContact = selectFirstContact();
     displayCurrentDetails(currentContact.id);
+  }
+
+  function selectFirstContact() {
+    const firstContact = document.querySelectorAll(selectors.contactListItem)[0];
+
+    firstContact.classList += ' active';
+
+    return firstContact;
   }
 
   function displayCurrentDetails(id) {
@@ -156,7 +162,9 @@ const uiCtrl = (() => {
       }
     });
 
-    currentContact.age = dataCtrl.getAge(currentContact.dob);
+    if(currentContact.dob) {
+      currentContact.age = dataCtrl.getAge(currentContact.dob);
+    }
 
     output = `
       <form>

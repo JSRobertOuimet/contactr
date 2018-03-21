@@ -1,5 +1,6 @@
 Mandatory...
-- Show fields only if populated
+- Add first contact
+- Generate contact details dynamically
 - Persist data externally
 - Upload photo
 - Sort contacts by last name
@@ -10,10 +11,10 @@ Nice to have...
 - Delete: add a customized modal
 - Arrows up and down: go through contacts sidebar
 - Align contact's name with avatar
-- Add groups (new sidebar)
 - Format phone numbers
 - Format dob
 
 New functionalities...
 - Search contact (WIP)
 - Export contact details / all contacts
+- Add groups (new sidebar)
