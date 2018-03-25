@@ -2,7 +2,7 @@
 
   const HttpService = (function() {
     let instance;
-    
+
     function init() {
 
       return {
@@ -11,18 +11,18 @@
         put: put,
         delete: del
       };
-    
+
       function get(url) {
-        return new Promise((resolve, reject) => {
+        return new Promise((res, rej) => {
           fetch(url)
-            .then(resolve => resolve.json())
-            .then(data => resolve(data))
-            .catch(err => reject(err));
+            .then(res => res.json())
+            .then(data => res(data))
+            .catch(err => rej(err));
         });
       }
-    
+
       function post(url, data) {
-        return new Promise((resolve, reject) => {
+        return new Promise((res, rej) => {
           fetch(url, {
             method: 'POST',
             headers: {
@@ -30,14 +30,14 @@
             },
             body: JSON.stringify(data)
           })
-            .then(resolve => resolve.json())
-            .then(data => resolve(data))
-            .catch(err => reject(err));
+            .then(res => res.json())
+            .then(data => res(data))
+            .catch(err => rej(err));
         });
       }
-    
+
       function put(url, data) {
-        return new Promise((resolve, reject) => {
+        return new Promise((res, rej) => {
           fetch(url, {
             method: 'PUT',
             headers: {
@@ -45,23 +45,23 @@
             },
             body: JSON.stringify(data)
           })
-            .then(resolve => resolve.json())
-            .then(data => resolve(data))
-            .catch(err => reject(err));
+            .then(res => res.json())
+            .then(data => res(data))
+            .catch(err => rej(err));
         });
       }
-    
+
       function del(url) {
-        return new Promise((resolve, reject) => {
+        return new Promise((res, rej) => {
           fetch(url, {
             method: 'DELETE',
             headers: {
               'Content-type': 'application/json'
             }
           })
-            .then(resolve => resolve.json())
-            .then(() => resolve('Resource deleted.'))
-            .catch(err => reject(err));
+            .then(res => res.json())
+            .then(() => res('Resource deleted.'))
+            .catch(err => rej(err));
         });
       }
     }
@@ -116,7 +116,7 @@
         if(a.lastName > b.lastName) {
           return 1;
         }
-    
+
         return 0;
       }
 
@@ -132,7 +132,7 @@
               storedContacts.push(contact);
               storedContacts.sort(_sortContacts);
             });
-            
+
             uic.populateContactList(storedContacts);
             // uic.displayCurrentDetails();
           });
