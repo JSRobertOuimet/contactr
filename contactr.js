@@ -4,8 +4,10 @@
     let instance;
 
     function init() {
+      const apiUrl = 'http://localhost:3000/contacts';
 
       return {
+        apiUrl: apiUrl,
         get: get,
         post: post,
         put: put,
@@ -82,10 +84,60 @@
 
     function init() {
       const storedContacts = [];
+      let currentContact;
 
       return {
-        storedContacts: storedContacts
+        storedContacts: storedContacts, // Array
+        currentContact: currentContact, // Object
+        sortContacts: sortContacts,
+        setCurrentContact: setCurrentContact,
+        changeCurrentContact: changeCurrentContact
       };
+
+      function sortContacts(a, b) {
+        if(a.lastName < b.lastName) return -1;
+        if(a.lastName > b.lastName) return 1;
+
+        return 0;
+      }
+
+      function setCurrentContact(storedContacts) {
+        storedContacts.forEach((contact, i) => {
+          if(i === 0) {
+            contact.active = true;
+            currentContact = contact;
+          }
+          else {
+            contact.active = false;
+          }
+          // (i === 0) ?
+          //   contact.active = true :
+          //   contact.active = false;
+        });
+
+        console.log(currentContact);
+      }
+
+      function changeCurrentContact(e) {
+        const dc = DataCtrl.getInstance();
+        const storedContacts = dc.storedContacts;
+
+        storedContacts.forEach(contact => {
+          contact.active = false;
+        });
+
+        storedContacts.forEach(contact => {
+          if(parseInt(e.target.id, 10) === contact.id) {
+            contact.active = true;
+            currentContact = contact;
+          }
+        });
+
+        console.clear();
+        console.log(currentContact);
+        // console.clear();
+        // console.log(JSON.stringify(storedContacts, ['lastName', 'active'], 2));
+      }
     }
 
     return {
@@ -103,38 +155,27 @@
     let instance;
 
     function init() {
-      const apiUrl = 'http://localhost:3000/contacts';
 
       return {
         setInitialState: setInitialState
       };
 
-      function _sortContacts(a, b) {
-        if(a.lastName < b.lastName) {
-          return -1;
-        }
-        if(a.lastName > b.lastName) {
-          return 1;
-        }
-
-        return 0;
-      }
-
       function setInitialState() {
-        const httpS = HttpService.getInstance();
+        const hs = HttpService.getInstance();
         const dc = DataCtrl.getInstance();
-        const uic = UICtrl.getInstance();
+        const uc = UICtrl.getInstance();
         let storedContacts = dc.storedContacts;
 
-        httpS.get(apiUrl)
+        hs.get(hs.apiUrl)
           .then(contacts => {
             contacts.forEach(contact => {
               storedContacts.push(contact);
-              storedContacts.sort(_sortContacts);
+              storedContacts.sort(dc.sortContacts);
             });
 
-            uic.populateContactList(storedContacts);
-            // uic.displayCurrentDetails();
+            dc.setCurrentContact(storedContacts);
+            uc.populateContactList(storedContacts);
+            // uc.displayCurrentContact(currentContact);
           });
       }
     }
@@ -155,23 +196,25 @@
 
     function init() {
       const selectors = {
-        contactList: '.contactList'
+        contactList: '.contactList',
+        contactListItem: '.contactListItem',
       };
 
       return {
         selectors: selectors,
-        populateContactList: populateContactList
+        populateContactList: populateContactList,
+        setActiveListItem: setActiveListItem
       };
 
-      function populateContactList(allContacts) {
+      function populateContactList(storedContacts) {
         const contactList = document.querySelector(selectors.contactList);
         let content = '';
 
-        if(allContacts.length === 0) {
+        if(storedContacts.length === 0) {
           console.log('No contacts');
         }
         else {
-          allContacts.forEach(contact => {
+          storedContacts.forEach(contact => {
             content += `
               <li id="${contact.id}" class="contactListItem list-group-item list-group-item-action">
                 <span class="contact-name">${contact.firstName} <b>${contact.lastName}</b></span>
@@ -179,7 +222,98 @@
           });
 
           contactList.innerHTML = content;
+
+          // ==============================
+          // Try passing currentContact instead
+          setActiveListItem(storedContacts);
         }
+      }
+
+      function setActiveListItem(storedContacts) {
+        const contactListItems = document.querySelectorAll(selectors.contactListItem);
+        let activeContact;
+
+        storedContacts.forEach(contact => {
+          if(contact.active === true) {
+            activeContact = contact;
+          }
+        });
+
+        contactListItems.forEach(contactListItem => {
+          if(parseInt(contactListItem.id, 10) === activeContact.id) {
+            contactListItem.classList += ' active';
+          }
+        });
+      }
+    }
+
+    return {
+      getInstance: () => {
+        if(!instance) {
+          instance = init();
+        }
+
+        return instance;
+      }
+    };
+  }());
+
+  const EventCtrl = (function() {
+    let instance;
+
+    function init() {
+
+      return {
+        loadEventListeners: loadEventListeners
+      };
+
+      function loadEventListeners() {
+        const uc = UICtrl.getInstance();
+        const dc = DataCtrl.getInstance();
+        const contactList = document.querySelector(uc.selectors.contactList);
+
+        contactList.addEventListener('click', dc.changeCurrentContact);
+      }
+    }
+
+    return {
+      getInstance: () => {
+        if(!instance) {
+          instance = init();
+        }
+
+        return instance;
+      }
+    };
+  }());
+
+  const LogHelper = (function() {
+    let instance;
+
+    function init() {
+      const [hs, dc, sc, uc, ec] = [
+        HttpService.getInstance(),
+        DataCtrl.getInstance(),
+        StateCtrl.getInstance(),
+        UICtrl.getInstance(),
+        EventCtrl.getInstance()
+      ];
+
+      return {
+        listAllContacts: listAllContacts,
+        listFunctions: listFunctions
+      };
+
+      function listAllContacts() {
+        console.log(dc.storedContacts);
+      }
+
+      function listFunctions() {
+        console.log(hs);
+        console.log(dc);
+        console.log(sc);
+        console.log(uc);
+        console.log(ec);
       }
     }
 
@@ -195,9 +329,16 @@
   }());
 
   const AppCtrl = (function() {
+    const dc = DataCtrl.getInstance();
     const sc = StateCtrl.getInstance();
+    const ec = EventCtrl.getInstance();
+    const lh = LogHelper.getInstance();
 
     sc.setInitialState();
+    ec.loadEventListeners();
+
+    // lh.listAllContacts();
+    // lh.listFunctions();
   }());
 
 }(this));
