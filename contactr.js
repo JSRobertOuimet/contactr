@@ -194,7 +194,7 @@
       };
 
       return {
-        selectors: selectors,
+        selectors: selectors, // Object
         populateContactList: populateContactList,
         setActiveListItem: setActiveListItem,
         displayCurrentContact: displayCurrentContact
@@ -205,7 +205,7 @@
         let content = '';
 
         if(storedContacts.length === 0) {
-          console.log('No contacts');
+          alert('Empty state needed!');
         }
         else {
           storedContacts.forEach(contact => {
@@ -250,14 +250,44 @@
 
             for(let key in contact) {
               if(contact[key] !== '' && key !== 'id' && key !== 'active') {
+                const fh = FormatHelper.getInstance();
+                const containerEl = document.createElement('div');
+                const jumbotron = document.createElement('div');
+                const contactDetailsBodyEl = document.createElement('div');
+                const rowEl = document.createElement('div');
+                const inputColEl = document.createElement('div');
+                const labelEl = document.createElement('label');
                 const inputEl = document.createElement('input');
+                let forVal;
+
+                labelEl.classList = 'col-sm-3 col-form-label-sm font-weight-bold';
+                labelEl.setAttribute('for', key);
+                labelEl.textContent = key;
+                // labelEl.textContent = fh.toTitleCase(key);
 
                 inputEl.id = key;
                 inputEl.classList = 'form-control-plaintext form-control-sm';
                 inputEl.setAttribute('value', contact[key]);
                 inputEl.setAttribute('readonly', true);
 
-                formEl.appendChild(inputEl);
+                inputColEl.classList = 'col-sm-9';
+                inputColEl.insertAdjacentElement('afterbegin', inputEl);
+
+                rowEl.classList = 'row';
+                rowEl.insertAdjacentElement('afterbegin', labelEl);
+                rowEl.insertAdjacentElement('beforeend', inputColEl);
+
+                forVal = rowEl.firstChild.attributes[1].value;
+                if(forVal === 'firstName' || forVal === 'lastName') {
+                  formEl.appendChild(rowEl);
+                }
+                else {
+                  contactDetailsBodyEl.classList = 'contactDetailsBody';
+                  
+                  contactDetailsBodyEl.insertAdjacentElement('afterbegin', rowEl);
+                  formEl.appendChild(contactDetailsBodyEl);
+                }
+
               }
             }
 
@@ -300,6 +330,34 @@
         const contactList = document.querySelector(uc.selectors.contactList);
 
         contactList.addEventListener('click', dc.changeCurrentContact);
+      }
+    }
+
+    return {
+      getInstance: () => {
+        if(!instance) {
+          instance = init();
+        }
+
+        return instance;
+      }
+    };
+  }());
+
+  // To Add ==========
+  const FormatHelper = (function() {
+    let instance;
+
+    function init() {
+
+      return {
+        toTitleCase: toTitleCase
+      };
+
+      function toTitleCase(input) {
+        let output;
+
+        return output;
       }
     }
 

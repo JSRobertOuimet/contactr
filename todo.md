@@ -1,9 +1,9 @@
 Mandatory...
+- Add labels
+- Add age
 - Add first contact
-- Generate contact details dynamically
 - Persist data externally
 - Upload photo
-- Sort contacts by last name
 - Deal with mobile layout (drawer for sidebar?)
 
 Nice to have...
