@@ -69,14 +69,14 @@
     }
 
     return {
-			getInstance: () => {
-				if(!instance) {
-					instance = init();
-				}
+      getInstance: () => {
+        if(!instance) {
+          instance = init();
+        }
 
-				return instance;
-			}
-		};
+        return instance;
+      }
+    };
   }());
 
   const DataCtrl = (function() {
@@ -181,14 +181,14 @@
     }
 
     return {
-			getInstance: () => {
-				if(!instance) {
-					instance = init();
-				}
+      getInstance: () => {
+        if(!instance) {
+          instance = init();
+        }
 
-				return instance;
-			}
-		};
+        return instance;
+      }
+    };
   }());
 
   const UICtrl = (function() {
