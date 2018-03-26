@@ -84,11 +84,9 @@
 
     function init() {
       const storedContacts = [];
-      let currentContact;
 
       return {
         storedContacts: storedContacts, // Array
-        currentContact: currentContact, // Object
         sortContacts: sortContacts,
         setCurrentContact: setCurrentContact,
         changeCurrentContact: changeCurrentContact
@@ -105,21 +103,16 @@
         storedContacts.forEach((contact, i) => {
           if(i === 0) {
             contact.active = true;
-            currentContact = contact;
           }
           else {
             contact.active = false;
           }
-          // (i === 0) ?
-          //   contact.active = true :
-          //   contact.active = false;
         });
-
-        console.log(currentContact);
       }
 
       function changeCurrentContact(e) {
         const dc = DataCtrl.getInstance();
+        const uc = UICtrl.getInstance();
         const storedContacts = dc.storedContacts;
 
         storedContacts.forEach(contact => {
@@ -129,14 +122,13 @@
         storedContacts.forEach(contact => {
           if(parseInt(e.target.id, 10) === contact.id) {
             contact.active = true;
-            currentContact = contact;
+            uc.displayCurrentContact(storedContacts);
+            uc.setActiveListItem(storedContacts);
           }
         });
 
         console.clear();
-        console.log(currentContact);
-        // console.clear();
-        // console.log(JSON.stringify(storedContacts, ['lastName', 'active'], 2));
+        console.log(JSON.stringify(storedContacts, ['lastName', 'active'], 2));
       }
     }
 
@@ -175,7 +167,7 @@
 
             dc.setCurrentContact(storedContacts);
             uc.populateContactList(storedContacts);
-            // uc.displayCurrentContact(currentContact);
+            uc.displayCurrentContact(storedContacts);
           });
       }
     }
@@ -198,12 +190,14 @@
       const selectors = {
         contactList: '.contactList',
         contactListItem: '.contactListItem',
+        contactDetails: '.contactDetails'
       };
 
       return {
         selectors: selectors,
         populateContactList: populateContactList,
-        setActiveListItem: setActiveListItem
+        setActiveListItem: setActiveListItem,
+        displayCurrentContact: displayCurrentContact
       };
 
       function populateContactList(storedContacts) {
@@ -223,8 +217,6 @@
 
           contactList.innerHTML = content;
 
-          // ==============================
-          // Try passing currentContact instead
           setActiveListItem(storedContacts);
         }
       }
@@ -243,6 +235,41 @@
           if(parseInt(contactListItem.id, 10) === activeContact.id) {
             contactListItem.classList += ' active';
           }
+          else {
+            contactListItem.classList = 'contactListItem list-group-item list-group-item-action';
+          }
+        });
+      }
+
+      function displayCurrentContact(storedContacts) {
+        storedContacts.forEach(contact => {
+
+          if(contact.active === true) {
+            const contactDetails = document.querySelector(selectors.contactDetails);
+            let formEl = document.createElement('form');
+
+            for(let key in contact) {
+              if(contact[key] !== '' && key !== 'id' && key !== 'active') {
+                const inputEl = document.createElement('input');
+
+                inputEl.id = key;
+                inputEl.classList = 'form-control-plaintext form-control-sm';
+                inputEl.setAttribute('value', contact[key]);
+                inputEl.setAttribute('readonly', true);
+
+                formEl.appendChild(inputEl);
+              }
+            }
+
+            if(contactDetails.hasChildNodes() === false) {
+              contactDetails.appendChild(formEl);
+            }
+            else {
+              contactDetails.innerHTML = '';
+              contactDetails.appendChild(formEl);
+            }
+          }
+
         });
       }
     }
@@ -325,7 +352,7 @@
 
         return instance;
       }
-    }
+    };
   }());
 
   const AppCtrl = (function() {

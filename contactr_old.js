@@ -391,7 +391,7 @@ const stateCtrl = (() => {
     uiCtrl.displayCurrentDetails(currentContact.id);
 
     avatar.className = 'img-thumbnail rounded-circle avatar d-block';
-    uploadBtn.className = 'uploadBtn d-none'
+    uploadBtn.className = 'uploadBtn d-none';
     editBtn.className = 'editBtn btn btn-outline-dark btn-sm d-block';
     deleteBtn.classList = 'deleteBtn btn btn-outline-danger btn-sm ml-2';
     updateBtn.classList = 'updateBtn d-none';
