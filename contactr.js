@@ -122,13 +122,10 @@
         storedContacts.forEach(contact => {
           if(parseInt(e.target.id, 10) === contact.id) {
             contact.active = true;
-            uc.displayCurrentContact(storedContacts);
             uc.setActiveListItem(storedContacts);
+            uc.displayCurrentContact(storedContacts);
           }
         });
-
-        console.clear();
-        console.log(JSON.stringify(storedContacts, ['lastName', 'active'], 2));
       }
     }
 
@@ -190,14 +187,17 @@
       const selectors = {
         contactList: '.contactList',
         contactListItem: '.contactListItem',
-        contactDetails: '.contactDetails'
+        contactName: '.contactName',
+        contactDetails: '.contactDetails',
+        searchInput: '.searchInput'
       };
 
       return {
         selectors: selectors, // Object
         populateContactList: populateContactList,
         setActiveListItem: setActiveListItem,
-        displayCurrentContact: displayCurrentContact
+        displayCurrentContact: displayCurrentContact,
+        searchContact: searchContact
       };
 
       function populateContactList(storedContacts) {
@@ -211,7 +211,7 @@
           storedContacts.forEach(contact => {
             content += `
               <li id="${contact.id}" class="contactListItem list-group-item list-group-item-action">
-                <span class="contact-name">${contact.firstName} <b>${contact.lastName}</b></span>
+                <span class="contactName">${contact.firstName} <b>${contact.lastName}</b></span>
               </li>`;
           });
 
@@ -246,25 +246,21 @@
 
           if(contact.active === true) {
             const contactDetails = document.querySelector(selectors.contactDetails);
-            let formEl = document.createElement('form');
+            const jumbotronEl = document.createElement('div');
+            const contactDetailsBodyEl = document.createElement('div');
+            const formEl = document.createElement('form');
 
             for(let key in contact) {
               if(contact[key] !== '' && key !== 'id' && key !== 'active') {
                 const fh = FormatHelper.getInstance();
                 const containerEl = document.createElement('div');
-                const jumbotron = document.createElement('div');
-                const contactDetailsBodyEl = document.createElement('div');
                 const rowEl = document.createElement('div');
                 const inputColEl = document.createElement('div');
-                const labelEl = document.createElement('label');
                 const inputEl = document.createElement('input');
+                const labelEl = document.createElement('label');
                 let forVal;
 
-                labelEl.classList = 'col-sm-3 col-form-label-sm font-weight-bold';
-                labelEl.setAttribute('for', key);
-                labelEl.textContent = key;
-                // labelEl.textContent = fh.toTitleCase(key);
-
+                // Inputs
                 inputEl.id = key;
                 inputEl.classList = 'form-control-plaintext form-control-sm';
                 inputEl.setAttribute('value', contact[key]);
@@ -273,33 +269,54 @@
                 inputColEl.classList = 'col-sm-9';
                 inputColEl.insertAdjacentElement('afterbegin', inputEl);
 
+                // Labels
+                labelEl.classList = 'col-sm-3 col-form-label-sm font-weight-bold';
+                labelEl.setAttribute('for', key);
+                labelEl.textContent = key;
+
                 rowEl.classList = 'row';
                 rowEl.insertAdjacentElement('afterbegin', labelEl);
                 rowEl.insertAdjacentElement('beforeend', inputColEl);
 
                 forVal = rowEl.firstChild.attributes[1].value;
                 if(forVal === 'firstName' || forVal === 'lastName') {
-                  formEl.appendChild(rowEl);
+                  jumbotronEl.classList = 'jumbotron jumbotron-fluid';
+                  jumbotronEl.appendChild(rowEl);
                 }
                 else {
                   contactDetailsBodyEl.classList = 'contactDetailsBody';
-                  
-                  contactDetailsBodyEl.insertAdjacentElement('afterbegin', rowEl);
-                  formEl.appendChild(contactDetailsBodyEl);
+                  contactDetailsBodyEl.appendChild(rowEl);
                 }
 
+                formEl.appendChild(jumbotronEl);
+                formEl.appendChild(contactDetailsBodyEl);
               }
             }
 
             if(contactDetails.hasChildNodes() === false) {
               contactDetails.appendChild(formEl);
             }
+            // If already populated, replace content
             else {
               contactDetails.innerHTML = '';
               contactDetails.appendChild(formEl);
             }
           }
+        });
+      }
 
+      function searchContact(e) {
+        const contactNames = document.querySelectorAll(selectors.contactName);
+        let searchInput = e.target.value;
+        let filteredContacts = document.querySelectorAll(selectors.contactListItem);
+
+        contactNames.forEach(contactName => {
+          if(contactName.textContent.indexOf(searchInput) === -1) {
+            contactName.parentElement.style.display = 'none';
+          }
+          else {
+            contactName.parentElement.style.display = 'block';
+          }
         });
       }
     }
@@ -328,8 +345,10 @@
         const uc = UICtrl.getInstance();
         const dc = DataCtrl.getInstance();
         const contactList = document.querySelector(uc.selectors.contactList);
+        const searchInput = document.querySelector(uc.selectors.searchInput);
 
         contactList.addEventListener('click', dc.changeCurrentContact);
+        searchInput.addEventListener('keyup', uc.searchContact);
       }
     }
 
@@ -414,7 +433,6 @@
   }());
 
   const AppCtrl = (function() {
-    const dc = DataCtrl.getInstance();
     const sc = StateCtrl.getInstance();
     const ec = EventCtrl.getInstance();
     const lh = LogHelper.getInstance();
