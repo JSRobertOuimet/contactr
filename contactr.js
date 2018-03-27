@@ -132,8 +132,39 @@
       }
 
       function update(e) {
-        console.log(e.target);
+        const hs = HttpService.getInstance();
+        const dc = DataCtrl.getInstance();
+        const uc = UICtrl.getInstance();
+        const apiUrl = hs.apiUrl;
+        const storedContacts = dc.storedContacts;
+        const inputs = document.querySelectorAll(uc.selectors.input);
+        let [keys, values] = [[], []];
+        let updatedContactDetails = {};
+
+        inputs.forEach(input => {
+          if(input.name !== 'Search' || input.value !== 'Delete') {
+            keys.push(input.id);
+
+            if(input.id === 'id') {
+              values.push(parseInt(input.value, 10));
+            }
+            else {
+              values.push(input.value);
+            }
+          }
+        });
+
+        keys.forEach((key, i) => {
+          updatedContactDetails[key] = values[i];
+        });
         e.preventDefault();
+
+        storedContacts.forEach(contact => {
+          if(contact.id === updatedContactDetails.id) {
+            hs.put(`${apiUrl}/${contact.id}`, updatedContactDetails);
+          }
+        });
+
       }
 
       function save(e) {
@@ -142,7 +173,9 @@
       }
 
       function del(e) {
-        console.log(e.target);
+        if(confirm('Are you sure you want to delete this contact?')) {
+          console.log('Deleting contact...');
+        }
         e.preventDefault();
       }
     }
@@ -165,6 +198,7 @@
 
       return {
         setInitialState: setInitialState,
+        submitAction: submitAction,
         edit: edit,
         cancel: cancel
       };
@@ -188,13 +222,87 @@
           });
       }
 
-      function edit(e) {
-        console.log(e.target);
+      function submitAction(e) {
+        const dc = DataCtrl.getInstance();
+        const formType = e.target.classList.value;
+
+        console.log(e);
+
+        switch(formType) {
+          case 'defaultForm':
+          dc.delete(e);
+          break;
+          case 'editForm':
+          dc.update(e);
+          break;
+          case 'addForm':
+          dc.save(e);
+          break;
+          default:
+          alert('Not an existing form type.');
+        }
+
         e.preventDefault();
       }
 
+      function edit() {
+        const uc = UICtrl.getInstance();
+        let contactDetailsForm = document.querySelector(uc.selectors.form);
+        let editBtn = document.querySelector(uc.selectors.editBtn);
+        let deleteBtn = document.querySelector(uc.selectors.deleteBtn);
+        let updateBtn = document.querySelector(uc.selectors.updateBtn);
+        let cancelBtn = document.querySelector(uc.selectors.cancelBtn);
+        let inputs = document.querySelectorAll(uc.selectors.input);
+
+        contactDetailsForm.classList = 'editForm';
+
+        [editBtn, deleteBtn] = [
+          editBtn.classList += ' d-none',
+          deleteBtn.classList += ' d-none'
+        ];
+
+        [updateBtn, cancelBtn] = [
+          updateBtn.classList = 'btn btn-sm updateBtn btn-outline-success',
+          cancelBtn.classList = 'btn btn-sm cancelBtn btn-outline-dark mr-2'
+        ];
+
+        inputs.forEach(input => {
+          input.removeAttribute('readonly');
+
+          if(input.id === 'firstName') {
+            input.select();
+          }
+        });
+      }
+
       function cancel(e) {
-        console.log(e.target);
+        const uc = UICtrl.getInstance();
+        let editBtn = document.querySelector(uc.selectors.editBtn);
+        let deleteBtn = document.querySelector(uc.selectors.deleteBtn);
+        let updateBtn = document.querySelector(uc.selectors.updateBtn);
+        let cancelBtn = document.querySelector(uc.selectors.cancelBtn);
+        let inputs = document.querySelectorAll(uc.selectors.input);
+
+        [editBtn, deleteBtn] = [
+          editBtn.classList += 'btn btn-sm editBtn btn-outline-dark mr-2',
+          deleteBtn.classList += 'btn btn-sm d- editBtn btn-outline-danger'
+        ];
+
+        [updateBtn, cancelBtn] = [
+          updateBtn.classList += ' d-none',
+          cancelBtn.classList += ' d-none'
+        ];
+
+        inputs.forEach(input => {
+          if(input.name !== 'Search') {
+            input.setAttribute('readonly', true);
+          }
+
+          if(input.id === 'firstName') {
+            input.blur();
+          }
+        });
+
         e.preventDefault();
       }
     }
@@ -224,7 +332,9 @@
         updateBtn: '.updateBtn',
         cancelBtn: '.cancelBtn',
         saveBtn: '.saveBtn',
-        deleteBtn: '.deleteBtn'
+        deleteBtn: '.deleteBtn',
+        form: 'form',
+        input: 'input'
       };
 
       return {
@@ -291,7 +401,7 @@
 
             // Discount id, active and empty properties
             for(let key in contact) {
-              if(key !== 'id' && key !== 'active' && contact[key] !== '') {
+              if(key !== 'active' && contact[key] !== '') {
                 const fh = FormatHelper.getInstance();
                 const containerEl = document.createElement('div');
                 const rowEl = document.createElement('div');
@@ -330,6 +440,7 @@
                   contactDetailsBodyEl.appendChild(rowEl);
                 }
 
+                formEl.classList = 'defaultForm';
                 formEl.appendChild(jumbotronEl);
                 formEl.appendChild(contactDetailsBodyEl);
               }
@@ -350,41 +461,53 @@
 
         function _buildFormButtons() {
           const rowEl = document.createElement('div');
-          const btnsContent = ['Edit', 'Update', 'Cancel', 'Save', 'Delete'];
+          const btnsContent = ['Edit', 'Cancel'];
+          const inputsContent = ['Update',  'Save', 'Delete'];
 
           for(let i = 0; i < btnsContent.length; i++) {
             const btnEl = document.createElement('button');
 
+            btnEl.setAttribute('type', 'button');
             btnEl.classList = 'btn btn-sm';
 
             switch(btnsContent[i]) {
               case 'Edit':
-              btnEl.classList += ' editBtn btn-outline-dark mr-2';
-              break;
-
-              case 'Update':
-              btnEl.classList += ' updateBtn btn-outline-dark mr-2 d-none';
-              break;
-
+                btnEl.classList += ' editBtn btn-outline-dark mr-2';
+                break;
               case 'Cancel':
-              btnEl.classList += ' cancelBtn btn-outline-dark d-none';
-              break;
-
-              case 'Save':
-              btnEl.classList += ' saveBtn btn-outline-success d-none';
-              break;
-
-              case 'Delete':
-              btnEl.classList += ' deleteBtn btn-outline-danger';
-              break;
-
+                btnEl.classList += ' cancelBtn btn-outline-dark d-none';
+                break;
               default:
-              alert('Not a valid button.');
+                alert('Not a valid input[type="button"].')
             }
 
             btnEl.textContent = btnsContent[i];
 
             rowEl.appendChild(btnEl);
+          }
+
+          for(let j = 0; j < inputsContent.length; j++) {
+            const inputEl = document.createElement('input');
+
+            inputEl.setAttribute('type', 'submit');
+            inputEl.classList = 'btn btn-sm';
+
+            switch(inputsContent[j]) {
+              case 'Update':
+                inputEl.classList += ' updateBtn btn-outline-dark mr-2 d-none';
+                break;
+              case 'Save':
+                inputEl.classList += ' saveBtn btn-outline-success d-none';
+                break;
+              case 'Delete':
+                inputEl.classList += ' deleteBtn btn-outline-danger';
+                break;
+              default:
+                alert('Not a valid input[type="submit"].');
+            }
+
+            inputEl.value = inputsContent[j];
+            rowEl.appendChild(inputEl);
           }
 
           rowEl.classList = 'd-flex justify-content-center';
@@ -434,23 +557,16 @@
         const dc = DataCtrl.getInstance();
         const sc = StateCtrl.getInstance();
 
-        const contactList = document.querySelector(uc.selectors.contactList);
-        const updateBtn = document.querySelector(uc.selectors.updateBtn);
-        const saveBtn = document.querySelector(uc.selectors.saveBtn);
-        const deleteBtn = document.querySelector(uc.selectors.deleteBtn);
-
+        // NEEDS TO BE CLEANED UP!
         const searchInput = document.querySelector(uc.selectors.searchInput);
-
+        const contactList = document.querySelector(uc.selectors.contactList);
+        const contactDetailsForm = document.querySelector(uc.selectors.form);
         const editBtn = document.querySelector(uc.selectors.editBtn);
         const cancelBtn = document.querySelector(uc.selectors.cancelBtn);
 
-        contactList.addEventListener('click', dc.changeCurrentContact);
-        updateBtn.addEventListener('click', dc.update);
-        saveBtn.addEventListener('click', dc.save);
-        deleteBtn.addEventListener('click', dc.delete);
-
         searchInput.addEventListener('keyup', uc.searchContact);
-
+        contactList.addEventListener('click', dc.changeCurrentContact);
+        contactDetailsForm.addEventListener('submit', sc.submitAction);
         editBtn.addEventListener('click', sc.edit);
         cancelBtn.addEventListener('click', sc.cancel);
       }

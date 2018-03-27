@@ -1,10 +1,9 @@
 {
   "contacts": [
     {
-      "avatar": "",
-      "id": 1,
       "firstName": "John R.",
-      "lastName": "Smith",
+      "lastName": "Denvor",
+      "id": 1,
       "phoneNumber": "14591203561",
       "emailAddress": "jdoe@gmail.com",
       "dob": "1945-12-04",
@@ -15,13 +14,10 @@
       "country": "Canada"
     },
     {
-      "avatar": "",
-      "id": 2,
-      "firstName": "Alicia",
+      "firstName": "Jen",
       "lastName": "Doe",
-      "phoneNumber": "",
+      "id": 2,
       "emailAddress": "asomething@hotmail.com",
-      "dob": "",
       "street": "1705-186 Beautiful Street",
       "city": "Some City",
       "region": "Dennvort",
@@ -29,10 +25,9 @@
       "country": "USA"
     },
     {
-      "avatar": "",
+      "firstName": "Lucy S.",
+      "lastName": "Smithson",
       "id": 3,
-      "firstName": "Lucy",
-      "lastName": "in the Sky with Diamonds",
       "phoneNumber": "18953409090"
     }
   ]
