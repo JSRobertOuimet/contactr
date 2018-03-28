@@ -142,7 +142,7 @@
         let updatedContactDetails = {};
 
         inputs.forEach(input => {
-          if(input.name !== 'Search' || input.value !== 'Delete') {
+          if(input.name !== 'Search' && input.value !== 'Delete') {
             keys.push(input.id);
 
             if(input.id === 'id') {
@@ -157,7 +157,6 @@
         keys.forEach((key, i) => {
           updatedContactDetails[key] = values[i];
         });
-        e.preventDefault();
 
         storedContacts.forEach(contact => {
           if(contact.id === updatedContactDetails.id) {
@@ -165,10 +164,12 @@
           }
         });
 
+        e.preventDefault();
       }
 
       function save(e) {
         console.log(e.target);
+
         e.preventDefault();
       }
 
@@ -176,6 +177,7 @@
         if(confirm('Are you sure you want to delete this contact?')) {
           console.log('Deleting contact...');
         }
+
         e.preventDefault();
       }
     }
@@ -198,7 +200,7 @@
 
       return {
         setInitialState: setInitialState,
-        submitAction: submitAction,
+        add: add,
         edit: edit,
         cancel: cancel
       };
@@ -207,6 +209,7 @@
         const hs = HttpService.getInstance();
         const dc = DataCtrl.getInstance();
         const uc = UICtrl.getInstance();
+        const ec = EventCtrl.getInstance();
         let storedContacts = dc.storedContacts;
 
         hs.get(hs.apiUrl)
@@ -215,55 +218,45 @@
               storedContacts.push(contact);
               storedContacts.sort(dc.sortContacts);
             });
-
             dc.setCurrentContact(storedContacts);
             uc.populateContactList(storedContacts);
             uc.displayCurrentContact(storedContacts);
+            ec.loadDefaultEvtListeners();
           });
       }
 
-      function submitAction(e) {
-        const dc = DataCtrl.getInstance();
-        const formType = e.target.classList.value;
+      function add() {
+        uc = UICtrl.getInstance();
+        ec = EventCtrl.getInstance();
+        let defaultForm = document.querySelector(uc.selectors.defaultForm);
 
-        console.log(e);
+        defaultForm.classList = 'addForm';
 
-        switch(formType) {
-          case 'defaultForm':
-          dc.delete(e);
-          break;
-          case 'editForm':
-          dc.update(e);
-          break;
-          case 'addForm':
-          dc.save(e);
-          break;
-          default:
-          alert('Not an existing form type.');
-        }
-
-        e.preventDefault();
+        ec.loadAddEvtListeners();
       }
 
       function edit() {
+        const dc = DataCtrl.getInstance();
         const uc = UICtrl.getInstance();
-        let contactDetailsForm = document.querySelector(uc.selectors.form);
-        let editBtn = document.querySelector(uc.selectors.editBtn);
-        let deleteBtn = document.querySelector(uc.selectors.deleteBtn);
+        const ec = EventCtrl.getInstance();
+        let defaultForm = document.querySelector(uc.selectors.defaultForm);
         let updateBtn = document.querySelector(uc.selectors.updateBtn);
         let cancelBtn = document.querySelector(uc.selectors.cancelBtn);
+        let editBtn = document.querySelector(uc.selectors.editBtn);
+        let deleteBtn = document.querySelector(uc.selectors.deleteBtn);
         let inputs = document.querySelectorAll(uc.selectors.input);
 
-        contactDetailsForm.classList = 'editForm';
-
-        [editBtn, deleteBtn] = [
-          editBtn.classList += ' d-none',
-          deleteBtn.classList += ' d-none'
-        ];
+        defaultForm.removeEventListener('submit', dc.delete);
+        defaultForm.classList = 'editForm';
 
         [updateBtn, cancelBtn] = [
           updateBtn.classList = 'btn btn-sm updateBtn btn-outline-success',
           cancelBtn.classList = 'btn btn-sm cancelBtn btn-outline-dark mr-2'
+        ];
+
+        [editBtn, deleteBtn] = [
+          editBtn.classList += ' d-none',
+          deleteBtn.classList += ' d-none'
         ];
 
         inputs.forEach(input => {
@@ -273,24 +266,29 @@
             input.select();
           }
         });
+
+        ec.loadEditEvtListeners();
       }
 
-      function cancel(e) {
+      function cancel() {
         const uc = UICtrl.getInstance();
+        let editForm = document.querySelector(uc.selectors.editForm);
         let editBtn = document.querySelector(uc.selectors.editBtn);
         let deleteBtn = document.querySelector(uc.selectors.deleteBtn);
         let updateBtn = document.querySelector(uc.selectors.updateBtn);
         let cancelBtn = document.querySelector(uc.selectors.cancelBtn);
         let inputs = document.querySelectorAll(uc.selectors.input);
 
-        [editBtn, deleteBtn] = [
-          editBtn.classList += 'btn btn-sm editBtn btn-outline-dark mr-2',
-          deleteBtn.classList += 'btn btn-sm d- editBtn btn-outline-danger'
-        ];
+        editForm.classList = 'defaultForm';
 
         [updateBtn, cancelBtn] = [
           updateBtn.classList += ' d-none',
           cancelBtn.classList += ' d-none'
+        ];
+
+        [editBtn, deleteBtn] = [
+          editBtn.classList = 'btn btn-sm editBtn btn-outline-dark mr-2',
+          deleteBtn.classList = 'btn btn-sm deleteBtn btn-outline-danger'
         ];
 
         inputs.forEach(input => {
@@ -302,8 +300,6 @@
             input.blur();
           }
         });
-
-        e.preventDefault();
       }
     }
 
@@ -328,12 +324,19 @@
         contactName: '.contactName',
         contactDetails: '.contactDetails',
         searchInput: '.searchInput',
+
+        defaultForm: '.defaultForm',
+        addForm: '.addForm',
+        editForm: '.editForm',
+
         editBtn: '.editBtn',
-        updateBtn: '.updateBtn',
         cancelBtn: '.cancelBtn',
+
+        addBtn: '.addBtn',
         saveBtn: '.saveBtn',
+        updateBtn: '.updateBtn',
         deleteBtn: '.deleteBtn',
-        form: 'form',
+
         input: 'input'
       };
 
@@ -399,9 +402,9 @@
             const formBtn = _buildFormButtons();
             const contactDetailsBodyEl = document.createElement('div');
 
-            // Discount id, active and empty properties
+            // Discount active, id, and empty properties
             for(let key in contact) {
-              if(key !== 'active' && contact[key] !== '') {
+              if(key !== 'active' && key !== 'id' && contact[key] !== '') {
                 const fh = FormatHelper.getInstance();
                 const containerEl = document.createElement('div');
                 const rowEl = document.createElement('div');
@@ -456,8 +459,6 @@
             }
           }
         });
-
-        ec.loadEventListeners();
 
         function _buildFormButtons() {
           const rowEl = document.createElement('div');
@@ -549,27 +550,38 @@
     function init() {
 
       return {
-        loadEventListeners: loadEventListeners
+        loadDefaultEvtListeners: loadDefaultEvtListeners,
+        loadEditEvtListeners: loadEditEvtListeners
       };
 
-      function loadEventListeners() {
-        const uc = UICtrl.getInstance();
+      function loadEditEvtListeners() {
         const dc = DataCtrl.getInstance();
+        const uc = UICtrl.getInstance();
         const sc = StateCtrl.getInstance();
-
-        // NEEDS TO BE CLEANED UP!
-        const searchInput = document.querySelector(uc.selectors.searchInput);
-        const contactList = document.querySelector(uc.selectors.contactList);
-        const contactDetailsForm = document.querySelector(uc.selectors.form);
-        const editBtn = document.querySelector(uc.selectors.editBtn);
+        const editForm = document.querySelector(uc.selectors.editForm);
         const cancelBtn = document.querySelector(uc.selectors.cancelBtn);
 
-        searchInput.addEventListener('keyup', uc.searchContact);
-        contactList.addEventListener('click', dc.changeCurrentContact);
-        contactDetailsForm.addEventListener('submit', sc.submitAction);
-        editBtn.addEventListener('click', sc.edit);
-        cancelBtn.addEventListener('click', sc.cancel);
+        editForm.addEventListener('submit', dc.update);
+        cancelBtn.addEventListener('click', sc.setInitialState);
       }
+    }
+
+    function loadDefaultEvtListeners() {
+      const uc = UICtrl.getInstance();
+      const dc = DataCtrl.getInstance();
+      const sc = StateCtrl.getInstance();
+
+      const searchInput = document.querySelector(uc.selectors.searchInput);
+      const contactList = document.querySelector(uc.selectors.contactList);
+      const defaultForm = document.querySelector(uc.selectors.defaultForm);
+      const addBtn = document.querySelector(uc.selectors.addBtn);
+      const editBtn = document.querySelector(uc.selectors.editBtn);
+
+      searchInput.addEventListener('keyup', uc.searchContact);
+      contactList.addEventListener('click', dc.changeCurrentContact);
+      defaultForm.addEventListener('submit', dc.delete);
+      addBtn.addEventListener('click', sc.add);
+      editBtn.addEventListener('click', sc.edit);
     }
 
     return {
@@ -583,7 +595,6 @@
     };
   }());
 
-  // To Add ==========
   const FormatHelper = (function() {
     let instance;
 
