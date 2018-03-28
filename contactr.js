@@ -382,13 +382,18 @@
         let content = '';
 
         if(storedContacts.length === 0) {
-          alert('Empty state needed!');
+          for(let i = 0; i < 20; i++) {
+            const liEl = document.createElement('li');
+            liEl.classList = 'contactListItem list-group-item';
+            liEl.style.height = 50 + 'px';
+            contactList.appendChild(liEl);
+          }
         }
         else {
           storedContacts.forEach(contact => {
-            const liEl = document.createElement('li');
             const spanEl = document.createElement('span');
             const bEl = document.createElement('b');
+            const liEl = document.createElement('li');
             let bufferedLastName;
 
             bufferedLastName = ` ${contact.lastName}`;
@@ -429,77 +434,89 @@
       }
 
       function displayCurrentContact(storedContacts) {
+        const uc = UICtrl.getInstance();
         const ec = EventCtrl.getInstance();
 
-        storedContacts.forEach(contact => {
+        if(storedContacts.length === 0) {
+          const contactDetails = document.querySelector(uc.selectors.contactDetails);
+          const divEl = document.createElement('div');
+          const message = 'You have no contacts. Add one!';
 
-          // Display active contact
-          if(contact.active === true) {
-            const contactDetails = document.querySelector(selectors.contactDetails);
-            const formEl = document.createElement('form');
-            const jumbotronEl = document.createElement('div');
-            const formBtn = _buildFormButtons();
-            const contactDetailsBodyEl = document.createElement('div');
+          divEl.classList += ' my-auto mx-auto text-center text-muted h4';
+          divEl.textContent = message;
+          contactDetails.appendChild(divEl);
+        }
+        else {
+          storedContacts.forEach(contact => {
 
-            // Discount active, id, and empty properties
-            for(let key in contact) {
-              if(key !== 'active' && contact[key] !== '') {
-                const fh = FormatHelper.getInstance();
-                const containerEl = document.createElement('div');
-                const rowEl = document.createElement('div');
-                const inputColEl = document.createElement('div');
-                const labelEl = document.createElement('label');
-                const inputEl = document.createElement('input');
-                let forVal;
+            // Display active contact
+            if(contact.active === true) {
+              const contactDetails = document.querySelector(selectors.contactDetails);
+              const formEl = document.createElement('form');
+              const jumbotronEl = document.createElement('div');
+              const formBtn = _buildFormButtons();
+              const contactDetailsBodyEl = document.createElement('div');
 
-                // Build labels
-                labelEl.classList = 'col-sm-3 col-form-label-sm font-weight-bold';
-                labelEl.setAttribute('for', key);
-                labelEl.textContent = key;
+              // Discount active, id, and empty properties
+              for(let key in contact) {
+                if(key !== 'active' && contact[key] !== '') {
+                  const fh = FormatHelper.getInstance();
+                  const containerEl = document.createElement('div');
+                  const rowEl = document.createElement('div');
+                  const inputColEl = document.createElement('div');
+                  const labelEl = document.createElement('label');
+                  const inputEl = document.createElement('input');
+                  let forVal;
 
-                rowEl.classList = 'row';
-                rowEl.insertAdjacentElement('afterbegin', labelEl);
-                rowEl.insertAdjacentElement('beforeend', inputColEl);
+                  // Build labels
+                  labelEl.classList = 'col-sm-3 col-form-label-sm font-weight-bold';
+                  labelEl.setAttribute('for', key);
+                  labelEl.textContent = key;
 
-                // Build inputs
-                inputEl.id = key;
-                inputEl.classList = 'form-control-plaintext form-control-sm';
-                inputEl.setAttribute('value', contact[key]);
-                inputEl.setAttribute('readonly', true);
+                  rowEl.classList = 'row';
+                  rowEl.insertAdjacentElement('afterbegin', labelEl);
+                  rowEl.insertAdjacentElement('beforeend', inputColEl);
 
-                inputColEl.classList = 'col-sm-9';
-                inputColEl.insertAdjacentElement('afterbegin', inputEl);
+                  // Build inputs
+                  inputEl.id = key;
+                  inputEl.classList = 'form-control-plaintext form-control-sm';
+                  inputEl.setAttribute('value', contact[key]);
+                  inputEl.setAttribute('readonly', true);
 
-                // Insert into form sections
-                forVal = rowEl.firstChild.attributes[1].value;
-                if(forVal === 'firstName' || forVal === 'lastName') {
-                  jumbotronEl.classList = 'jumbotron jumbotron-fluid';
-                  jumbotronEl.appendChild(rowEl);
-                  jumbotronEl.appendChild(formBtn);
+                  inputColEl.classList = 'col-sm-9';
+                  inputColEl.insertAdjacentElement('afterbegin', inputEl);
+
+                  // Insert into form sections
+                  forVal = rowEl.firstChild.attributes[1].value;
+                  if(forVal === 'firstName' || forVal === 'lastName') {
+                    jumbotronEl.classList = 'jumbotron jumbotron-fluid';
+                    jumbotronEl.appendChild(rowEl);
+                    jumbotronEl.appendChild(formBtn);
+                  }
+                  else {
+                    contactDetailsBodyEl.classList = 'contactDetailsBody';
+                    contactDetailsBodyEl.appendChild(rowEl);
+                  }
+
+                  formEl.classList = 'defaultForm';
+                  formEl.appendChild(jumbotronEl);
+                  formEl.appendChild(contactDetailsBodyEl);
                 }
-                else {
-                  contactDetailsBodyEl.classList = 'contactDetailsBody';
-                  contactDetailsBodyEl.appendChild(rowEl);
-                }
+              }
 
-                formEl.classList = 'defaultForm';
-                formEl.appendChild(jumbotronEl);
-                formEl.appendChild(contactDetailsBodyEl);
+              // Insert sections into form
+              if(contactDetails.hasChildNodes() === false) {
+                contactDetails.appendChild(formEl);
+              }
+              else {
+                contactDetails.innerHTML = '';
+                contactDetails.appendChild(formEl);
               }
             }
+          });
 
-            // Insert sections into form
-            if(contactDetails.hasChildNodes() === false) {
-              contactDetails.appendChild(formEl);
-            }
-            else {
-              contactDetails.innerHTML = '';
-              contactDetails.appendChild(formEl);
-            }
-          }
-        });
-
-        ec.loadDefaultEvtListeners();
+          ec.loadDefaultEvtListeners();
+        }
 
         function _buildFormButtons() {
           const rowEl = document.createElement('div');
