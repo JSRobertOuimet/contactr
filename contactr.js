@@ -142,15 +142,9 @@
         let updatedContactDetails = {};
 
         inputs.forEach(input => {
-          if(input.name !== 'Search' && input.value !== 'Delete') {
+          if(input.name !== 'Search' && input.value !== 'Cancel' && input.value !== 'Update' && input.value !== 'Delete' && input.value !== 'Save') {
             keys.push(input.id);
-
-            if(input.id === 'id') {
-              values.push(parseInt(input.value, 10));
-            }
-            else {
-              values.push(input.value);
-            }
+            values.push(input.value);
           }
         });
 
@@ -159,12 +153,13 @@
         });
 
         storedContacts.forEach(contact => {
-          if(contact.id === updatedContactDetails.id) {
+          if(contact.id === parseInt(updatedContactDetails.id, 10)) {
             hs.put(`${apiUrl}/${contact.id}`, updatedContactDetails);
           }
         });
 
         e.preventDefault();
+        console.log('Done!');
       }
 
       function save(e) {
@@ -221,7 +216,6 @@
             dc.setCurrentContact(storedContacts);
             uc.populateContactList(storedContacts);
             uc.displayCurrentContact(storedContacts);
-            ec.loadDefaultEvtListeners();
           });
       }
 
@@ -248,6 +242,8 @@
 
         defaultForm.removeEventListener('submit', dc.delete);
         defaultForm.classList = 'editForm';
+        ec.loadEditEvtListeners();
+        console.log('Edit event listeners loaded.');
 
         [updateBtn, cancelBtn] = [
           updateBtn.classList = 'btn btn-sm updateBtn btn-outline-success',
@@ -266,12 +262,13 @@
             input.select();
           }
         });
-
-        ec.loadEditEvtListeners();
       }
 
       function cancel() {
+        const dc = DataCtrl.getInstance();
         const uc = UICtrl.getInstance();
+        const ec = EventCtrl.getInstance();
+        let defaultForm = document.querySelector(uc.selectors.defaultForm);
         let editForm = document.querySelector(uc.selectors.editForm);
         let editBtn = document.querySelector(uc.selectors.editBtn);
         let deleteBtn = document.querySelector(uc.selectors.deleteBtn);
@@ -279,7 +276,10 @@
         let cancelBtn = document.querySelector(uc.selectors.cancelBtn);
         let inputs = document.querySelectorAll(uc.selectors.input);
 
+        editForm.removeEventListener('submit', dc.update);
         editForm.classList = 'defaultForm';
+        ec.loadDefaultEvtListeners();
+        console.log('Default event listeners loaded.');
 
         [updateBtn, cancelBtn] = [
           updateBtn.classList += ' d-none',
@@ -404,7 +404,7 @@
 
             // Discount active, id, and empty properties
             for(let key in contact) {
-              if(key !== 'active' && key !== 'id' && contact[key] !== '') {
+              if(key !== 'active' && contact[key] !== '') {
                 const fh = FormatHelper.getInstance();
                 const containerEl = document.createElement('div');
                 const rowEl = document.createElement('div');
@@ -460,6 +460,8 @@
           }
         });
 
+        ec.loadDefaultEvtListeners();
+
         function _buildFormButtons() {
           const rowEl = document.createElement('div');
           const btnsContent = ['Edit', 'Cancel'];
@@ -479,7 +481,7 @@
                 btnEl.classList += ' cancelBtn btn-outline-dark d-none';
                 break;
               default:
-                alert('Not a valid input[type="button"].')
+                alert('Not a valid input[type="button"].');
             }
 
             btnEl.textContent = btnsContent[i];
@@ -551,37 +553,50 @@
 
       return {
         loadDefaultEvtListeners: loadDefaultEvtListeners,
+        loadAddEvtListeners: loadAddEvtListeners,
         loadEditEvtListeners: loadEditEvtListeners
       };
 
+      function loadDefaultEvtListeners() {
+        const dc = DataCtrl.getInstance();
+        const sc = StateCtrl.getInstance();
+        const uc = UICtrl.getInstance();
+
+        const searchInput = document.querySelector(uc.selectors.searchInput);
+        const contactList = document.querySelector(uc.selectors.contactList);
+
+        const defaultForm = document.querySelector(uc.selectors.defaultForm);
+        const addBtn = document.querySelector(uc.selectors.addBtn);
+        const editBtn = document.querySelector(uc.selectors.editBtn);
+
+        searchInput.addEventListener('keyup', uc.searchContact);
+        contactList.addEventListener('click', dc.changeCurrentContact);
+
+        // CRUD
+        defaultForm.addEventListener('submit', dc.delete);
+
+        // State swaping
+        addBtn.addEventListener('click', sc.add);
+        editBtn.addEventListener('click', sc.edit);
+      }
+
+      function loadAddEvtListeners() {
+        console.log('Add event listeners loaded!');
+      }
+
       function loadEditEvtListeners() {
         const dc = DataCtrl.getInstance();
-        const uc = UICtrl.getInstance();
         const sc = StateCtrl.getInstance();
+        const uc = UICtrl.getInstance();
         const editForm = document.querySelector(uc.selectors.editForm);
         const cancelBtn = document.querySelector(uc.selectors.cancelBtn);
 
+        // CRUD
         editForm.addEventListener('submit', dc.update);
-        cancelBtn.addEventListener('click', sc.setInitialState);
+
+        // State swaping
+        cancelBtn.addEventListener('click', sc.cancel);
       }
-    }
-
-    function loadDefaultEvtListeners() {
-      const uc = UICtrl.getInstance();
-      const dc = DataCtrl.getInstance();
-      const sc = StateCtrl.getInstance();
-
-      const searchInput = document.querySelector(uc.selectors.searchInput);
-      const contactList = document.querySelector(uc.selectors.contactList);
-      const defaultForm = document.querySelector(uc.selectors.defaultForm);
-      const addBtn = document.querySelector(uc.selectors.addBtn);
-      const editBtn = document.querySelector(uc.selectors.editBtn);
-
-      searchInput.addEventListener('keyup', uc.searchContact);
-      contactList.addEventListener('click', dc.changeCurrentContact);
-      defaultForm.addEventListener('submit', dc.delete);
-      addBtn.addEventListener('click', sc.add);
-      editBtn.addEventListener('click', sc.edit);
     }
 
     return {
