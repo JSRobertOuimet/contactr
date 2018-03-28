@@ -169,8 +169,19 @@
       }
 
       function del(e) {
+        const hs = HttpService.getInstance();
+        const dc = DataCtrl.getInstance();
+        const uc = UICtrl.getInstance();
+        const apiUrl = hs.apiUrl;
+        const storedContacts = dc.storedContacts;
+        const currentContactId = parseInt(document.querySelector(uc.selectors.currentContactId).value, 10);
+
         if(confirm('Are you sure you want to delete this contact?')) {
-          console.log('Deleting contact...');
+          storedContacts.forEach(contact => {
+            if(contact.id === currentContactId) {
+              hs.delete(`${apiUrl}/${contact.id}`);
+            }
+          });
         }
 
         e.preventDefault();
@@ -195,8 +206,8 @@
 
       return {
         setInitialState: setInitialState,
-        add: add,
-        edit: edit,
+        toAddState: toAddState,
+        toEditState: toEditState,
         cancel: cancel
       };
 
@@ -219,17 +230,34 @@
           });
       }
 
-      function add() {
+      function toAddState() {
+        dc = DataCtrl.getInstance();
         uc = UICtrl.getInstance();
         ec = EventCtrl.getInstance();
         let defaultForm = document.querySelector(uc.selectors.defaultForm);
+        let saveBtn = document.querySelector(uc.selectors.saveBtn);
+        let cancelBtn = document.querySelector(uc.selectors.cancelBtn);
+        let editBtn = document.querySelector(uc.selectors.editBtn);
+        let deleteBtn = document.querySelector(uc.selectors.deleteBtn);
+        let inputs = document.querySelectorAll(uc.selectors.input);
 
+        defaultForm.removeEventListener('submit', dc.delete);
         defaultForm.classList = 'addForm';
-
         ec.loadAddEvtListeners();
+        console.log('Add event listeners loaded.');
+
+        [saveBtn, cancelBtn] = [
+          saveBtn.classList = 'btn btn-sm saveBtn btn-outline-success',
+          cancelBtn.classList = 'btn btn-sm cancelBtn btn-outline-dark mr-2'
+        ];
+
+        [editBtn, deleteBtn] = [
+          editBtn.classList += ' d-none',
+          deleteBtn.classList += ' d-none'
+        ];
       }
 
-      function edit() {
+      function toEditState() {
         const dc = DataCtrl.getInstance();
         const uc = UICtrl.getInstance();
         const ec = EventCtrl.getInstance();
@@ -323,6 +351,7 @@
         contactListItem: '.contactListItem',
         contactName: '.contactName',
         contactDetails: '.contactDetails',
+        currentContactId: '#id',
         searchInput: '.searchInput',
 
         defaultForm: '.defaultForm',
@@ -357,13 +386,23 @@
         }
         else {
           storedContacts.forEach(contact => {
-            content += `
-              <li id="${contact.id}" class="contactListItem list-group-item list-group-item-action">
-                <span class="contactName">${contact.firstName} <b>${contact.lastName}</b></span>
-              </li>`;
-          });
+            const liEl = document.createElement('li');
+            const spanEl = document.createElement('span');
+            const bEl = document.createElement('b');
+            let bufferedLastName;
 
-          contactList.innerHTML = content;
+            bufferedLastName = ` ${contact.lastName}`;
+            bEl.textContent = bufferedLastName;
+
+            spanEl.classList = 'contactName';
+            spanEl.textContent = contact.firstName;
+            spanEl.insertAdjacentElement('beforeend', bEl);
+
+            liEl.id = contact.id;
+            liEl.classList = 'contactListItem list-group-item list-group-item-action';
+            liEl.appendChild(spanEl);
+            contactList.appendChild(liEl);
+          });
 
           setActiveListItem(storedContacts);
         }
@@ -576,12 +615,12 @@
         defaultForm.addEventListener('submit', dc.delete);
 
         // State swaping
-        addBtn.addEventListener('click', sc.add);
-        editBtn.addEventListener('click', sc.edit);
+        addBtn.addEventListener('click', sc.toAddState);
+        editBtn.addEventListener('click', sc.toEditState);
       }
 
       function loadAddEvtListeners() {
-        console.log('Add event listeners loaded!');
+
       }
 
       function loadEditEvtListeners() {

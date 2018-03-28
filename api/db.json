@@ -1,11 +1,11 @@
 {
   "contacts": [
     {
-      "firstName": "Steve",
+      "firstName": "John",
       "lastName": "Denver",
       "id": 1,
       "phoneNumber": "14591203561",
-      "emailAddress": "jdoe@gmail.com",
+      "emailAddress": "jdenver@gmail.com",
       "dob": "1945-12-04",
       "street": "129 Some Street",
       "city": "Wonderlust",
@@ -14,18 +14,7 @@
       "country": "Canada"
     },
     {
-      "firstName": "Jen",
-      "lastName": "Doe",
-      "id": 2,
-      "emailAddress": "asomething@hotmail.com",
-      "street": "1705-186 Beautiful Street",
-      "city": "Some City",
-      "region": "Dennvort",
-      "postalCode": "56709",
-      "country": "USA"
-    },
-    {
-      "firstName": "Lucy S.",
+      "firstName": "Lucy A.",
       "lastName": "Smithson",
       "id": 3,
       "phoneNumber": "18953409090"
