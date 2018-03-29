@@ -1,4 +1,5 @@
 Mandatory...
+- Add functionality
 - Add no results state
 - Format labels
 - Add age
@@ -14,5 +15,6 @@ Nice to have...
 - Format dob
 
 New functionalities...
+- Display location of contact using Google Maps
 - Export contact details / all contacts
 - Add groups (new sidebar?)

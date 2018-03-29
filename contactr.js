@@ -244,7 +244,6 @@
         defaultForm.removeEventListener('submit', dc.delete);
         defaultForm.classList = 'addForm';
         ec.loadAddEvtListeners();
-        console.log('Add event listeners loaded.');
 
         [saveBtn, cancelBtn] = [
           saveBtn.classList = 'btn btn-sm saveBtn btn-outline-success',
@@ -255,6 +254,12 @@
           editBtn.classList += ' d-none',
           deleteBtn.classList += ' d-none'
         ];
+
+        inputs.forEach(input => {
+          if(input.dataset.writable === 'true') {
+            input.value = '';
+          }
+        });
       }
 
       function toEditState() {
@@ -271,7 +276,6 @@
         defaultForm.removeEventListener('submit', dc.delete);
         defaultForm.classList = 'editForm';
         ec.loadEditEvtListeners();
-        console.log('Edit event listeners loaded.');
 
         [updateBtn, cancelBtn] = [
           updateBtn.classList = 'btn btn-sm updateBtn btn-outline-success',
@@ -307,7 +311,6 @@
         editForm.removeEventListener('submit', dc.update);
         editForm.classList = 'defaultForm';
         ec.loadDefaultEvtListeners();
-        console.log('Default event listeners loaded.');
 
         [updateBtn, cancelBtn] = [
           updateBtn.classList += ' d-none',
@@ -457,8 +460,10 @@
               const formBtn = _buildFormButtons();
               const contactDetailsBodyEl = document.createElement('div');
 
+              
               // Discount active, id, and empty properties
               for(let key in contact) {
+                console.log(key);
                 if(key !== 'active' && contact[key] !== '') {
                   const fh = FormatHelper.getInstance();
                   const containerEl = document.createElement('div');
@@ -466,6 +471,18 @@
                   const inputColEl = document.createElement('div');
                   const labelEl = document.createElement('label');
                   const inputEl = document.createElement('input');
+                  const writableInputs = (
+                    key === 'firstName' ||
+                    key === 'lastName' ||
+                    key === 'phoneNumber' ||
+                    key === 'emailAddress' ||
+                    key === 'dateOfBirth' ||
+                    key === 'street' ||
+                    key === 'city' ||
+                    key === 'region' ||
+                    key === 'postalCode' ||
+                    key === 'country'
+                  );
                   let forVal;
 
                   // Build labels
@@ -482,6 +499,13 @@
                   inputEl.classList = 'form-control-plaintext form-control-sm';
                   inputEl.setAttribute('value', contact[key]);
                   inputEl.setAttribute('readonly', true);
+
+                  if(writableInputs) {
+                    inputEl.setAttribute('data-writable', true);
+                  }
+                  else {
+                    inputEl.setAttribute('data-writable', false);
+                  }
 
                   inputColEl.classList = 'col-sm-9';
                   inputColEl.insertAdjacentElement('afterbegin', inputEl);
@@ -637,13 +661,14 @@
       }
 
       function loadAddEvtListeners() {
-
+        console.log('Add event listeners loaded.');
       }
 
       function loadEditEvtListeners() {
         const dc = DataCtrl.getInstance();
         const sc = StateCtrl.getInstance();
         const uc = UICtrl.getInstance();
+
         const editForm = document.querySelector(uc.selectors.editForm);
         const cancelBtn = document.querySelector(uc.selectors.cancelBtn);
 

@@ -4,15 +4,15 @@
       "id": 1,
       "firstName": "John",
       "lastName": "Travolta",
-      "dob": "1954-02-18",
+      "dateOfBirth": "1954-02-18",
       "region": "Florida",
       "country": "USA"
     },
     {
-      "id": 2,
       "firstName": "Jeffrey",
       "lastName": "Conaway",
-      "dob": "1950-10-05",
+      "id": 2,
+      "dateOfBirth": "1950-10-05",
       "city": "New York City",
       "region": "New York",
       "country": "USA"
@@ -21,7 +21,7 @@
       "id": 3,
       "firstName": "Carolyn Laurie",
       "lastName": "Kane",
-      "dob": "1952-06-18",
+      "dateOfBirth": "1952-06-18",
       "city": "Cleveland",
       "region": "Ohio",
       "country": "USA"
