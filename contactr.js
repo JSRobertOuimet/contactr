@@ -117,18 +117,36 @@
         const dc = DataCtrl.getInstance();
         const uc = UICtrl.getInstance();
         const storedContacts = dc.storedContacts;
+        let currentContact;
 
         storedContacts.forEach(contact => {
           contact.active = false;
         });
 
-        storedContacts.forEach(contact => {
-          if(parseInt(e.target.id, 10) === contact.id) {
-            contact.active = true;
-            uc.setActiveListItem(storedContacts);
-            uc.displayCurrentContact(storedContacts);
+        if(e.key) {
+          switch(e.key) {
+            case 'ArrowDown':
+              console.log('Next in line.');
+              break;
+            case 'ArrowUp':
+              console.log('Previous one.');
+              break;
+            default:
+              console.log('Not a valid keyboard action.');
           }
-        });
+
+          e.preventDefault();
+        }
+        else {
+          storedContacts.forEach(contact => {
+            if(parseInt(e.target.id, 10) === contact.id) {
+              contact.active = true;
+              currentContact = contact;
+              uc.setActiveListItem(storedContacts);
+              uc.displayCurrentContact(storedContacts);
+            }
+          });
+        }
       }
 
       function update(e) {
@@ -159,11 +177,30 @@
         });
 
         e.preventDefault();
-        console.log('Done!');
       }
 
       function save(e) {
-        console.log(e.target);
+        const hs = HttpService.getInstance();
+        const dc = DataCtrl.getInstance();
+        const uc = UICtrl.getInstance();
+        const apiUrl = hs.apiUrl;
+        const storedContacts = dc.storedContacts;
+        const inputs = document.querySelectorAll(uc.selectors.input);
+        let [keys, values] = [[], []];
+        let newContactDetails = {};
+
+        inputs.forEach(input => {
+          if(input.dataset.writable === 'true') {
+            keys.push(input.id);
+            values.push(input.value);
+          }
+        });
+
+        keys.forEach((key, i) => {
+          newContactDetails[key] = values[i];
+        });
+
+        hs.post(apiUrl, newContactDetails);
 
         e.preventDefault();
       }
@@ -257,7 +294,12 @@
 
         inputs.forEach(input => {
           if(input.dataset.writable === 'true') {
-            input.value = '';
+            input.removeAttribute('readonly');
+            input.classList = 'form-control form-control-sm';
+
+            if(input.id === 'firstName') {
+              input.select();
+            }
           }
         });
       }
@@ -266,6 +308,7 @@
         const dc = DataCtrl.getInstance();
         const uc = UICtrl.getInstance();
         const ec = EventCtrl.getInstance();
+        const storedContacts = dc.storedContacts;
         let defaultForm = document.querySelector(uc.selectors.defaultForm);
         let updateBtn = document.querySelector(uc.selectors.updateBtn);
         let cancelBtn = document.querySelector(uc.selectors.cancelBtn);
@@ -288,10 +331,13 @@
         ];
 
         inputs.forEach(input => {
-          input.removeAttribute('readonly');
+          if(input.dataset.writable === 'true') {
+            input.removeAttribute('readonly');
+            input.classList = 'form-control form-control-sm';
 
-          if(input.id === 'firstName') {
-            input.select();
+            if(input.id === 'firstName') {
+              input.select();
+            }
           }
         });
       }
@@ -300,37 +346,55 @@
         const dc = DataCtrl.getInstance();
         const uc = UICtrl.getInstance();
         const ec = EventCtrl.getInstance();
+        const storedContacts = dc.storedContacts;
         let defaultForm = document.querySelector(uc.selectors.defaultForm);
+        let addForm = document.querySelector(uc.selectors.addForm);
         let editForm = document.querySelector(uc.selectors.editForm);
         let editBtn = document.querySelector(uc.selectors.editBtn);
+        let saveBtn = document.querySelector(uc.selectors.saveBtn);
         let deleteBtn = document.querySelector(uc.selectors.deleteBtn);
         let updateBtn = document.querySelector(uc.selectors.updateBtn);
         let cancelBtn = document.querySelector(uc.selectors.cancelBtn);
         let inputs = document.querySelectorAll(uc.selectors.input);
 
-        editForm.removeEventListener('submit', dc.update);
-        editForm.classList = 'defaultForm';
-        ec.loadDefaultEvtListeners();
+        if(confirm('Are you sure you want to cancel? All changes will be lost.')) {
+          if(addForm) {
+            addForm.removeEventListener('submit', dc.save);
+            addForm.classList = 'defaultForm';
 
-        [updateBtn, cancelBtn] = [
-          updateBtn.classList += ' d-none',
-          cancelBtn.classList += ' d-none'
-        ];
+            [saveBtn, cancelBtn] = [
+              saveBtn.classList += ' d-none',
+              cancelBtn.classList += ' d-none'
+            ];
+          }
+          else {
+            editForm.removeEventListener('submit', dc.update);
+            editForm.classList = 'defaultForm';
 
-        [editBtn, deleteBtn] = [
-          editBtn.classList = 'btn btn-sm editBtn btn-outline-dark mr-2',
-          deleteBtn.classList = 'btn btn-sm deleteBtn btn-outline-danger'
-        ];
-
-        inputs.forEach(input => {
-          if(input.name !== 'Search') {
-            input.setAttribute('readonly', true);
+            [updateBtn, cancelBtn] = [
+              updateBtn.classList += ' d-none',
+              cancelBtn.classList += ' d-none'
+            ];
           }
 
-          if(input.id === 'firstName') {
-            input.blur();
-          }
-        });
+          [editBtn, deleteBtn] = [
+            editBtn.classList = 'btn btn-sm editBtn btn-outline-dark mr-2',
+            deleteBtn.classList = 'btn btn-sm deleteBtn btn-outline-danger'
+          ];
+
+          ec.loadDefaultEvtListeners();
+
+          inputs.forEach(input => {
+            if(input.dataset.writable === 'true') {
+              input.setAttribute('readonly', true);
+              input.classList = 'form-control-plaintext form-control-sm';
+
+              if(input.id === 'firstName') {
+                input.blur();
+              }
+            }
+          });
+        }
       }
     }
 
@@ -460,10 +524,8 @@
               const formBtn = _buildFormButtons();
               const contactDetailsBodyEl = document.createElement('div');
 
-              
               // Discount active, id, and empty properties
               for(let key in contact) {
-                console.log(key);
                 if(key !== 'active' && contact[key] !== '') {
                   const fh = FormatHelper.getInstance();
                   const containerEl = document.createElement('div');
@@ -642,6 +704,8 @@
         const sc = StateCtrl.getInstance();
         const uc = UICtrl.getInstance();
 
+        const storedContacts = dc.storedContacts;
+
         const searchInput = document.querySelector(uc.selectors.searchInput);
         const contactList = document.querySelector(uc.selectors.contactList);
 
@@ -658,10 +722,24 @@
         // State swaping
         addBtn.addEventListener('click', sc.toAddState);
         editBtn.addEventListener('click', sc.toEditState);
+
+        // Navigation
+        window.addEventListener('keydown', dc.changeCurrentContact);
       }
 
       function loadAddEvtListeners() {
-        console.log('Add event listeners loaded.');
+        const dc = DataCtrl.getInstance();
+        const sc = StateCtrl.getInstance();
+        const uc = UICtrl.getInstance();
+
+        const addForm = document.querySelector(uc.selectors.addForm);
+        const cancelBtn = document.querySelector(uc.selectors.cancelBtn);
+
+        // CRUD
+        addForm.addEventListener('submit', dc.save);
+
+        // State swaping
+        cancelBtn.addEventListener('click', sc.cancel);
       }
 
       function loadEditEvtListeners() {

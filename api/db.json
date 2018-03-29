@@ -9,7 +9,7 @@
       "country": "USA"
     },
     {
-      "firstName": "Jeffrey",
+      "firstName": "John",
       "lastName": "Conaway",
       "id": 2,
       "dateOfBirth": "1950-10-05",
@@ -25,6 +25,33 @@
       "city": "Cleveland",
       "region": "Ohio",
       "country": "USA"
+    },
+    {
+      "firstName": "Robert Anthony",
+      "lastName": "De Niro Jr",
+      "dateOfBirth": "1943-08-17",
+      "city": "Greenwich Village",
+      "region": "New York",
+      "country": "USA",
+      "id": 4
+    },
+    {
+      "firstName": "Meryl",
+      "lastName": "Streep",
+      "dateOfBirth": "1949-06-22",
+      "city": "Summit",
+      "region": "New Jersey",
+      "country": "USA",
+      "id": 5
+    },
+    {
+      "firstName": "Don",
+      "lastName": "Gummer",
+      "dateOfBirth": "1946-12-12",
+      "city": "Indianapolis",
+      "region": "Indiana",
+      "country": "USA",
+      "id": 6
     }
   ]
 }
