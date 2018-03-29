@@ -124,18 +124,20 @@
         });
 
         if(e.key) {
-          switch(e.key) {
-            case 'ArrowDown':
-              console.log('Next in line.');
-              break;
-            case 'ArrowUp':
-              console.log('Previous one.');
-              break;
-            default:
-              console.log('Not a valid keyboard action.');
-          }
+          // switch(e.key) {
+          //   case 'ArrowDown':
+          //     console.log('Next in line.');
+          //     break;
+          //   case 'ArrowUp':
+          //     console.log('Previous one.');
+          //     break;
+          //   default:
+          //     console.log('Not a valid keyboard action.');
+          // }
 
-          e.preventDefault();
+          // e.preventDefault();
+
+          console.log(e.key);
         }
         else {
           storedContacts.forEach(contact => {
@@ -160,7 +162,7 @@
         let updatedContactDetails = {};
 
         inputs.forEach(input => {
-          if(input.name !== 'Search' && input.value !== 'Cancel' && input.value !== 'Update' && input.value !== 'Delete' && input.value !== 'Save') {
+          if(input.dataset.contactRelated === 'true') {
             keys.push(input.id);
             values.push(input.value);
           }
@@ -190,7 +192,7 @@
         let newContactDetails = {};
 
         inputs.forEach(input => {
-          if(input.dataset.writable === 'true') {
+          if(input.dataset.contactRelated === 'true') {
             keys.push(input.id);
             values.push(input.value);
           }
@@ -293,7 +295,8 @@
         ];
 
         inputs.forEach(input => {
-          if(input.dataset.writable === 'true') {
+          if(input.dataset.contactRelated === 'true') {
+            input.value = '';
             input.removeAttribute('readonly');
             input.classList = 'form-control form-control-sm';
 
@@ -331,7 +334,7 @@
         ];
 
         inputs.forEach(input => {
-          if(input.dataset.writable === 'true') {
+          if(input.dataset.contactRelated === 'true') {
             input.removeAttribute('readonly');
             input.classList = 'form-control form-control-sm';
 
@@ -385,13 +388,10 @@
           ec.loadDefaultEvtListeners();
 
           inputs.forEach(input => {
-            if(input.dataset.writable === 'true') {
+            if(input.dataset.contactRelated === 'true') {
               input.setAttribute('readonly', true);
               input.classList = 'form-control-plaintext form-control-sm';
-
-              if(input.id === 'firstName') {
-                input.blur();
-              }
+              document.location.reload();
             }
           });
         }
@@ -533,7 +533,8 @@
                   const inputColEl = document.createElement('div');
                   const labelEl = document.createElement('label');
                   const inputEl = document.createElement('input');
-                  const writableInputs = (
+                  const contactRelated = (
+                    key === 'id' ||
                     key === 'firstName' ||
                     key === 'lastName' ||
                     key === 'phoneNumber' ||
@@ -562,11 +563,11 @@
                   inputEl.setAttribute('value', contact[key]);
                   inputEl.setAttribute('readonly', true);
 
-                  if(writableInputs) {
-                    inputEl.setAttribute('data-writable', true);
+                  if(contactRelated) {
+                    inputEl.setAttribute('data-contact-related', true);
                   }
                   else {
-                    inputEl.setAttribute('data-writable', false);
+                    inputEl.setAttribute('data-contact-related', false);
                   }
 
                   inputColEl.classList = 'col-sm-9';

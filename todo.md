@@ -1,5 +1,4 @@
 # Mandatory...
-- Add functionality
 - Add no results state
 - Format labels
 - Add age
