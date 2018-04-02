@@ -682,29 +682,27 @@
         }
 
         contactNames.forEach(contactName => {
-          // Not a match
           if(contactName.textContent.toUpperCase().indexOf(searchInput) === -1) {
             contactName.parentElement.style.display = 'none';
           }
-          // Match
           else {
             contactName.parentElement.style.display = 'block';
             results++;
+
+            if(document.querySelector('.noResult')) {
+              document.querySelector('.noResult').remove();
+            }
           }
         });
 
-        // if(results === 0 && searchInput !== '') {
-        //   const divEl = document.createElement('div');
-        //   const message = 'No results.';
+        if(results === 0) {
+          const divEl = document.createElement('div');
+          const message = 'No results.';
 
-        //   divEl.classList = 'my-auto mx-auto text-center text-muted noResult';
-        //   divEl.textContent = message;
-        //   contactList.insertAdjacentElement('afterbegin', divEl);
-        // }
-
-        // if(results === storedContacts.length && searchInput === '') {
-        //   document.querySelector('.noResult').remove();
-        // }
+          divEl.classList = 'mx-auto text-muted noResult';
+          divEl.textContent = message;
+          contactList.insertAdjacentElement('afterbegin', divEl);
+        }
       }
     }
 
