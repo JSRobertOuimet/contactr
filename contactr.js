@@ -136,8 +136,6 @@
           // }
 
           // e.preventDefault();
-
-          console.log(e.key);
         }
         else {
           storedContacts.forEach(contact => {
@@ -583,6 +581,10 @@
                   else {
                     contactDetailsBodyEl.classList = 'contactDetailsBody';
                     contactDetailsBodyEl.appendChild(rowEl);
+
+                    if(rowEl.children[1].children[0].id === 'id') {
+                      rowEl.classList += ' d-none';
+                    }
                   }
 
                   formEl.classList = 'defaultForm';
@@ -663,18 +665,46 @@
       }
 
       function searchContact(e) {
+        const dc = DataCtrl.getInstance();
+        const storedContacts = dc.storedContacts;
+        const contactList = document.querySelector(selectors.contactList);
         const contactNames = document.querySelectorAll(selectors.contactName);
-        let searchInput = e.target.value;
-        let filteredContacts = document.querySelectorAll(selectors.contactListItem);
+        let searchInput = e.target.value.toUpperCase();
+        let results = 0;
+
+        // Ignore these
+        switch(e.key) {
+          case 'Shift':
+          case 'Control':
+          case 'Alt':
+          case 'Meta':
+            return;
+        }
 
         contactNames.forEach(contactName => {
-          if(contactName.textContent.indexOf(searchInput) === -1) {
+          // Not a match
+          if(contactName.textContent.toUpperCase().indexOf(searchInput) === -1) {
             contactName.parentElement.style.display = 'none';
           }
+          // Match
           else {
             contactName.parentElement.style.display = 'block';
+            results++;
           }
         });
+
+        // if(results === 0 && searchInput !== '') {
+        //   const divEl = document.createElement('div');
+        //   const message = 'No results.';
+
+        //   divEl.classList = 'my-auto mx-auto text-center text-muted noResult';
+        //   divEl.textContent = message;
+        //   contactList.insertAdjacentElement('afterbegin', divEl);
+        // }
+
+        // if(results === storedContacts.length && searchInput === '') {
+        //   document.querySelector('.noResult').remove();
+        // }
       }
     }
 
