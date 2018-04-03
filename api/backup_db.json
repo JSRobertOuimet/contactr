@@ -1,0 +1,71 @@
+{
+  "contacts": [
+    {
+      "firstName": "John",
+      "lastName": "Travolta",
+      "id": 1,
+      "phoneNumber": "14591203561",
+      "emailAddress": "jtravolta@aol.com",
+      "dateOfBirth": "1954-02-18",
+      "street": "123 Street Name",
+      "city": "Some City",
+      "region": "Florida",
+      "postalCode": "89403",
+      "country": "USA"
+    },
+    {
+      "firstName": "John",
+      "lastName": "Conaway",
+      "id": 2,
+      "dateOfBirth": "1950-10-05",
+      "city": "New York City",
+      "region": "New York",
+      "country": "USA"
+    },
+    {
+      "id": 3,
+      "firstName": "Carolyn Laurie",
+      "lastName": "Kane",
+      "dateOfBirth": "1952-06-18",
+      "city": "Cleveland",
+      "region": "Ohio",
+      "country": "USA"
+    },
+    {
+      "firstName": "Robert Anthony",
+      "lastName": "De Niro Jr",
+      "dateOfBirth": "1943-08-17",
+      "city": "Greenwich Village",
+      "region": "New York",
+      "country": "USA",
+      "id": 4
+    },
+    {
+      "firstName": "Meryl",
+      "lastName": "Streep",
+      "dateOfBirth": "1949-06-22",
+      "city": "Summit",
+      "region": "New Jersey",
+      "country": "USA",
+      "id": 5
+    },
+    {
+      "firstName": "Don",
+      "lastName": "Gummer",
+      "dateOfBirth": "1946-12-12",
+      "city": "Indianapolis",
+      "region": "Indiana",
+      "country": "USA",
+      "id": 6
+    },
+    {
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "dateOfBirth": "1992-01-24",
+      "city": "Laval",
+      "region": "Québec",
+      "country": "Canada",
+      "id": 7
+    }
+  ]
+}
