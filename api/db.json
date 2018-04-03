@@ -52,6 +52,15 @@
       "region": "Indiana",
       "country": "USA",
       "id": 6
+    },
+    {
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "dateOfBirth": "1992-01-24",
+      "city": "Laval",
+      "region": "Québec",
+      "country": "Canada",
+      "id": 7
     }
   ]
 }

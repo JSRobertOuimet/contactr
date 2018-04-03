@@ -1,5 +1,5 @@
 # Mandatory...
-- Add no results state
+- Show all fields on add
 - Format labels
 - Add age
 - Persist data externally
@@ -19,5 +19,4 @@
 - Add groups (new sidebar?)
 
 # Maintainability
-- Store writable input in a variable globally accessible
 - Create a function that returns relevant DOM elements
